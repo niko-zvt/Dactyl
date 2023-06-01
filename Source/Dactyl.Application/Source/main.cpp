@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Dactyl.Utils.h"
+#include "Dactyl.FileParser.h"
 #include "Dactyl.IModel.h"
 #include "Dactyl.ModelLocator.h"
 #include "Dactyl.FEModel.h"
@@ -17,6 +18,9 @@ int main(int argc, char *argv[])
     // Create a unique FE model and provide it to the model locator
     std::unique_ptr<Dactyl::Model::FEModel> feModel = std::make_unique<Dactyl::Model::FEModel>();
     Dactyl::Model::ModelLocator::provideModel(feModel.get());
+
+    Dactyl::Application::FileParser::parseFromFile("C:\\Users\\Digimat\\Repos\\Dactyl\\Source\\Dactyl.Application\\Resources\\Meshes\\task_mesh_homo2.k");
+    
 
     // Test model
     Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();

@@ -25,7 +25,7 @@ namespace Dactyl::Model
         _materials.push_back(mat);
 
         // Create properties
-        std::shared_ptr<IProperty> prop = std::make_shared<ShellProperty>(1, mat->getMaterialID())
+        std::shared_ptr<IProperty> prop = std::make_shared<ShellProperty>(1, mat->getMaterialID());
         
         // Create DOFs
 

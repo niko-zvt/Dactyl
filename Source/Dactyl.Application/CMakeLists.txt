@@ -17,6 +17,36 @@ configure_file(
     "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.Utils.h"
 )
 
+configure_file(
+    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.FEMChunk.h"
+    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.FEMChunk.h"
+)
+
+configure_file(
+    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.FEMLine.h"
+    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.FEMLine.h"
+)
+
+configure_file(
+    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.FileParser.h"
+    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.FileParser.h"
+)
+
+configure_file(
+    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.ChunkParser.h"
+    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.ChunkParser.h"
+)
+
+configure_file(
+    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.ParserResult.h"
+    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.ParserResult.h"
+)
+
+configure_file(
+    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Resources/Meshes/task_mesh_homo2.k"
+    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/task_mesh_homo2.k" 
+    COPYONLY)
+
 file(GLOB_RECURSE HEADER_FILES ${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/*.h)
 file(GLOB_RECURSE SOURCE_FILES ${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Source/*.cpp 
                                ${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Source/*.h)

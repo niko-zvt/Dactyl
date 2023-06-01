@@ -1,7 +1,9 @@
+#pragma once
 #ifndef _Dactyl_Utils_h_
 #define _Dactyl_Utils_h_
 
 #include <string>
+#include <vector>
 
 namespace Dactyl::Application
 {
@@ -14,6 +16,7 @@ namespace Dactyl::Application
             static void parse_args(const int argc, const char *argv[]);
 
             static std::string to_string(bool value);
+            static std::vector<std::string> split_string(std::string str);
     };
 }
 
