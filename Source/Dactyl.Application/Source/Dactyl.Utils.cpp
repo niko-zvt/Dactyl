@@ -5,6 +5,13 @@
 
 namespace Dactyl::Application
 {
+    void Utils::print_string(std::string value)
+    {
+        std::cout 
+            << value
+            << std::endl;
+    }
+
     void Utils::print_help(std::string value)
     {
         std::cout
@@ -17,7 +24,10 @@ namespace Dactyl::Application
 
     void Utils::print_version()
     {
-        std::cout << "Version: " << g_version << std::endl;
+        std::cout 
+            << "Version: "
+            << g_version
+            << std::endl;
     }
 
     void Utils::parse_args(const int argc, const char *argv[])
@@ -36,5 +46,13 @@ namespace Dactyl::Application
                 print_version();
             }
         }
+    }
+
+    std::string Utils::to_string(bool value)
+    {
+        if (value)
+            return "true";
+        
+        return "false";
     }
 }

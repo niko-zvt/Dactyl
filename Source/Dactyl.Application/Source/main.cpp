@@ -5,12 +5,14 @@
 #include "Dactyl.ModelLocator.h"
 #include "Dactyl.FEModel.h"
 
+using Dactyl::Application::Utils;
+
 int main(int argc, char *argv[])
 {
     // Parse args
     if(argc > 1)
     {
-        Dactyl::Application::Utils::parse_args(argc, const_cast<const char**>(argv));
+        Utils::parse_args(argc, const_cast<const char**>(argv));
     }
 
     // Create a unique FE model and provide it to the model locator
@@ -19,6 +21,10 @@ int main(int argc, char *argv[])
 
     // Test model
     Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+    auto result = model.loadModel();
+
+    Utils::print_string(Utils::to_string(result));
+    
     model.print();
 
     return 0;
