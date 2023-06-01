@@ -11,9 +11,7 @@ namespace Dactyl::Model
     {
         public:
             virtual int getNodeID() = 0;
-            virtual void setNodeID(int id) = 0;
-            virtual Eigen::Vector<double, 3> getCoords() = 0;
-            virtual void setNodeCoords(Eigen::Vector<double, 3> coords) = 0;
+            virtual Eigen::Vector3d getCoords() = 0;
     };
 }
 

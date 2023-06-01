@@ -12,6 +12,8 @@ namespace Dactyl::Model
     class IElement
     {
         public:
+            virtual int getElementID() = 0;
+            virtual int getPropertyID() = 0;
             virtual void calculateStiffnessMatrix() = 0;
             virtual int getNodesCount() = 0;
     };
