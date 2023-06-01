@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Calc.h"
+#include "Dactyl.Calc.h"
 #include "Dactyl.FEModel.h"
 #include <Core>
 #include <Dense>
@@ -9,7 +9,7 @@ namespace Dactyl::Model
 
     void FEModel::hello_model()
     {
-        auto suma = test_sum(5.1, 4.2);
+        auto suma = Dactyl::Math::test_sum(5.1, 4.2);
         std::cout << "Hello, Model!\n\t5.1 + 4.2 = 9.3 == " << suma << std::endl;
 
         Eigen::Matrix3d test; //3 by 3 double precision matrix initialization
