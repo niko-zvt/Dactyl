@@ -1,20 +1,52 @@
 #include <iostream>
 #include "Dactyl.Calc.h"
 #include "Dactyl.FEModel.h"
+#include "Nodes/Dactyl.INode.h"
+#include "Dofs/Dactyl.IDof.h"
+#include "Elements/Dactyl.IElement.h"
+#include "Elements/Dactyl.LinearTriangularElement.h"
 #include <Core>
 #include <Dense>
+#include <vector>
 
 namespace Dactyl::Model
 {
     bool FEModel::loadModel()
     {
-        return false;
+        // Load FE model (create elements, nodes, etc.)
+        std::shared_ptr<IElement> elem = std::make_shared<LinearTriangularElement>();
+        _elements.push_back(elem);
+        return true;
     }
 
     bool FEModel::saveModel()
     {
         return false;
     }
+
+    int FEModel::getNodesCount()
+    {
+        int count = 0;
+        std::vector<IElementPtr>::iterator it;
+        for(it = _elements.begin(); it < _elements.end(); it++)
+        {
+            count += (*it)->getNodesCount();
+        }
+        return count;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     void FEModel::print()
     {

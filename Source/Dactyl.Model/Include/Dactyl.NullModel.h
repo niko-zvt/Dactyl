@@ -26,6 +26,11 @@ namespace Dactyl::Model
             virtual void print() override
             {
             }
+
+            virtual int getNodesCount() override
+            {
+                return -1;
+            }
        
             NullModel(NullModel const&) = delete;
             void operator=(NullModel const&) = delete;
