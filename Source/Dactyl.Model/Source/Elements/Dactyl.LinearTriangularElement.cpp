@@ -21,6 +21,6 @@ namespace Dactyl::Model
 
     int LinearTriangularElement::getNodesCount()
     {
-        return _nodes.size();
+        return _nodesIDs.size();
     }
 }

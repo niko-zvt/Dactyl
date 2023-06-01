@@ -24,7 +24,7 @@ namespace Dactyl::Model
             void operator=(LinearTriangularElement const&) = delete;
 
         private:
-            std::vector<std::shared_ptr<INode>> _nodes;
+            std::vector<int> _nodesIDs;
             Eigen::Matrix<double, 3, 6> _B;
     };
 }
