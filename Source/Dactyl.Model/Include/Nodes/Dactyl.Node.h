@@ -16,7 +16,7 @@ namespace Dactyl::Model
         public:
             Node(int id, Eigen::Vector<double, 3> coords)
             {
-                _id = id;
+                _nodeID = id;
                 _coords = coords;
             }
 

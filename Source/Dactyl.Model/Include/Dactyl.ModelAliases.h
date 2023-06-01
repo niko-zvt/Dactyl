@@ -4,15 +4,19 @@
 
 #include "Dactyl.FEModel.h"
 #include "Elements/Dactyl.IElement.h"
+#include "Nodes/Dactyl.INode.h"
 
 namespace Dactyl::Model
 {
     // Aliases for smart pointers
-	class FEModel;
-	typedef std::unique_ptr<FEModel> FEModelPtr;
+	class INode;
+	typedef std::shared_ptr<INode> INodePtr;
 
 	class IElement;
-	typedef std::shared_ptr<IElement> IElementPtr;
+	using IElementPtr = std::shared_ptr<IElement>;
+
+	class FEModel;
+	typedef std::unique_ptr<FEModel> FEModelPtr;
 }
 
 #endif /* _Dactyl.ModelAliases.h_ */
