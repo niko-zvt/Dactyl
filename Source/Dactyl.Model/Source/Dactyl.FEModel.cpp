@@ -6,6 +6,20 @@
 
 namespace Dactyl::Model
 {
+    bool FEModel::loadModel()
+    {
+        return false;
+    }
+
+    bool FEModel::saveModel()
+    {
+        return false;
+    }
+
+    void FEModel::print()
+    {
+        hello_model();
+    }
 
     void FEModel::hello_model()
     {
