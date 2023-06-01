@@ -1,7 +1,8 @@
 # Dactyl.Model
 cmake_minimum_required(VERSION 3.16.0)
 
-file(GLOB_RECURSE HEADER_FILES ${PROJECT_SOURCE_DIR}/${LIB_MODEL}/Include/*.h)
+file(GLOB_RECURSE HEADER_FILES ${PROJECT_SOURCE_DIR}/${LIB_MODEL}/Include/*.h
+                               ${PROJECT_SOURCE_DIR}/${LIB_MODEL}/Include/*/*.h)
 file(GLOB_RECURSE SOURCE_FILES ${PROJECT_SOURCE_DIR}/${LIB_MODEL}/Source/*.cpp 
                                ${PROJECT_SOURCE_DIR}/${LIB_MODEL}/Source/*.h)
 

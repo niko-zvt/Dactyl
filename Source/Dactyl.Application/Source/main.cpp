@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
     // Test model
     Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
     auto result = model.loadModel();
+    auto n = model.getNodesCount();
 
     Utils::print_string(Utils::to_string(result));
     
