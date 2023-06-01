@@ -16,24 +16,15 @@ namespace Dactyl::Model
             {
             }
     
-            virtual bool loadModel() override
-            {
-                return false;
-            }
-    
-            virtual bool saveModel() override
-            {
-                return false;
-            }
-
-            virtual void print() override
-            {
-                hello_model();
-            }
+            virtual bool loadModel() override;
+            virtual bool saveModel() override;
+            virtual void print() override;
        
+        private:
             void print_matrix(Eigen::MatrixX3d m);
             void hello_model();
 
+        public:
             FEModel(FEModel const&) = delete;
             void operator=(FEModel const&) = delete;
     };
