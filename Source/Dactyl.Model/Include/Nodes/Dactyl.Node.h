@@ -14,38 +14,16 @@ namespace Dactyl::Model
     class Node : public INode
     {
         public:
-            Node(int id, Eigen::Vector<double, 3> coords)
-            {
-                _nodeID = id;
-                _coords = coords;
-            }
-
-            virtual int getNodeID() override
-            {
-                return _nodeID;
-            };
-
-            virtual void setNodeID(int id) override
-            {
-                _nodeID = id;
-            }
-
-            virtual Eigen::Vector<double, 3> getCoords() override
-            {
-                return _coords;
-            }
-
-            virtual void setNodeCoords(Eigen::Vector<double, 3> coords) override
-            {
-                _coords = coords;
-            }
+            Node(int id, Eigen::Vector3d coords);
+            virtual int getNodeID() override;
+            virtual Eigen::Vector3d getCoords() override;
 
             Node(Node const&) = delete;
             void operator=(Node const&) = delete;
 
         private:
             int _nodeID;
-            Eigen::Vector<double, 3> _coords;
+            Eigen::Vector3d _coords;
     };
 }
 

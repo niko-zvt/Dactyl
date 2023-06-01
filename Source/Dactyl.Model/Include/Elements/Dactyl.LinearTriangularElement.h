@@ -5,6 +5,7 @@
 #include <Core>
 #include <Dense>
 #include <vector>
+#include "Nodes/Dactyl.Node.h"
 #include "Nodes/Dactyl.INode.h"
 #include "Dofs/Dactyl.IDof.h"
 #include "Elements/Dactyl.IElement.h"
@@ -15,8 +16,10 @@ namespace Dactyl::Model
     class LinearTriangularElement : public IElement
     {
         public:
-            LinearTriangularElement();
+            LinearTriangularElement(int eid, int pid, const std::vector<int> _nodesIDs);
 
+            virtual int getElementID() override;
+            virtual int getPropertyID() override;
             virtual void calculateStiffnessMatrix() override;
             virtual int getNodesCount() override;
 
@@ -24,6 +27,8 @@ namespace Dactyl::Model
             void operator=(LinearTriangularElement const&) = delete;
 
         private:
+            int _elementID = -1;
+            int _propertyID = -1;
             std::vector<int> _nodesIDs;
             Eigen::Matrix<double, 3, 6> _B;
     };
