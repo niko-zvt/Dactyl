@@ -27,7 +27,7 @@ namespace Dactyl::Model
     int FEModel::getNodesCount()
     {
         int count = 0;
-        std::vector<IElementPtr>::iterator it;
+        std::vector<std::shared_ptr<IElement>>::iterator it;
         for(it = _elements.begin(); it < _elements.end(); it++)
         {
             count += (*it)->getNodesCount();

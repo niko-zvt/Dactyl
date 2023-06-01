@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Dactyl.Utils.h"
-#include "Dactyl.ModelAliases.h"
 #include "Dactyl.IModel.h"
 #include "Dactyl.ModelLocator.h"
 #include "Dactyl.FEModel.h"
@@ -16,7 +15,7 @@ int main(int argc, char *argv[])
     }
 
     // Create a unique FE model and provide it to the model locator
-    Dactyl::Model::FEModelPtr feModel = std::make_unique<Dactyl::Model::FEModel>();
+    std::unique_ptr<Dactyl::Model::FEModel> feModel = std::make_unique<Dactyl::Model::FEModel>();
     Dactyl::Model::ModelLocator::provideModel(feModel.get());
 
     // Test model

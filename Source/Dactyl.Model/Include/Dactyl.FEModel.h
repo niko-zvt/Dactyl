@@ -5,7 +5,6 @@
 #include <Core>
 #include <Dense>
 #include <vector>
-#include "Dactyl.ModelAliases.h"
 #include "Nodes/Dactyl.INode.h"
 #include "Dofs/Dactyl.IDof.h"
 #include "Elements/Dactyl.IElement.h"
@@ -13,6 +12,7 @@
 
 namespace Dactyl::Model
 {
+    
     class FEModel : public IModel
     {
         public:
