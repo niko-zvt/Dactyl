@@ -6,6 +6,7 @@
 #include <Dense>
 #include <vector>
 #include "Materials/Dactyl.IMaterial.h"
+#include "Properties/Dactyl.IProperty.h"
 #include "Nodes/Dactyl.INode.h"
 #include "Dofs/Dactyl.IDof.h"
 #include "Elements/Dactyl.IElement.h"
@@ -37,7 +38,7 @@ namespace Dactyl::Model
         private:
             std::vector<std::shared_ptr<IMaterial>> _materials;
             std::vector<std::shared_ptr<INode>> _nodes;
-            // Props
+            std::vector<std::shared_ptr<IProperty>> _properties;
             std::vector<std::shared_ptr<IElement>> _elements;
             std::vector<IDof> _dofs;
     };

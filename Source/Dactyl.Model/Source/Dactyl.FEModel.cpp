@@ -5,6 +5,8 @@
 #include "Materials/Dactyl.IsotropicMaterial.h"
 #include "Nodes/Dactyl.INode.h"
 #include "Nodes/Dactyl.Node.h"
+#include "Properties/Dactyl.IProperty.h"
+#include "Properties/Dactyl.ShellProperty.h"
 #include "Dofs/Dactyl.IDof.h"
 #include "Elements/Dactyl.IElement.h"
 #include "Elements/Dactyl.LinearTriangularElement.h"
@@ -23,7 +25,8 @@ namespace Dactyl::Model
         _materials.push_back(mat);
 
         // Create properties
-
+        std::shared_ptr<IProperty> prop = std::make_shared<ShellProperty>(1, mat->getMaterialID())
+        
         // Create DOFs
 
         // Create Loads
