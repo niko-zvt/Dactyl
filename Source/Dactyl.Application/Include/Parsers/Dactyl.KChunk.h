@@ -9,6 +9,9 @@
 
 namespace Dactyl::Application
 {
+    class KChunk;
+    using KChunkPtr = std::shared_ptr<KChunk>;
+
     class KChunk
     {
         public:
@@ -22,9 +25,14 @@ namespace Dactyl::Application
                 _parent = nullptr;
             };
 
-            void setParentChunk(std::shared_ptr<KChunk>& parent)
+            void insertSubChunk(KChunkPtr* child)
             {
-                _parent = parent;
+                _subChunks.push_back(*child);
+            };
+
+            void setParentChunk(KChunkPtr* parent)
+            {
+                _parent = *parent;
             };
 
             int getLevel()
@@ -52,7 +60,7 @@ namespace Dactyl::Application
                 return _ref;
             };
 
-            std::vector<std::shared_ptr<KChunk>>& getSubChunks()
+            std::vector<KChunkPtr>& getSubChunks()
             {
                 return _subChunks;
             };
@@ -63,8 +71,8 @@ namespace Dactyl::Application
             std::string _type = "";
             std::string _data = "";
             std::string _ref = "";
-            std::shared_ptr<KChunk> _parent;
-            std::vector<std::shared_ptr<KChunk>> _subChunks;
+            KChunkPtr _parent;
+            std::vector<KChunkPtr> _subChunks;
     };
 
     class KChunkSet
@@ -89,7 +97,7 @@ namespace Dactyl::Application
     class KChunkLevels
     {
         public:
-            void set(std::shared_ptr<KChunk>& kChunk)
+            void set(KChunkPtr& kChunk)
             {
                 auto level = kChunk->getLevel();
                 auto iter = currentLevelChunks.find(level);
@@ -100,15 +108,21 @@ namespace Dactyl::Application
                 currentLevelChunks.insert({level, kChunk});
             };
 
-            std::shared_ptr<KChunk>& getParentChunk(std::shared_ptr<KChunk>& kChunk)
+            bool getParentChunk(KChunkPtr* child, KChunkPtr* parent)
             {
-                auto level = kChunk->getLevel();
-                auto chunk = currentLevelChunks[level - 1];
-                return chunk;
+                auto level = (*child)->getLevel();
+                if(level == 0)
+                {
+                    parent = nullptr;
+                    return false;
+                }
+
+                parent = &currentLevelChunks[level - 1];
+                return true;
             };
 
         private:
-            std::map<int, std::shared_ptr<KChunk>> currentLevelChunks;
+            std::map<int, KChunkPtr> currentLevelChunks;
     };
 }
 
