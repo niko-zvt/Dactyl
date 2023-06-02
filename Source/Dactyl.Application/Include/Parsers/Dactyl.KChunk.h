@@ -1,28 +1,28 @@
 #pragma once
-#ifndef _Dactyl_FEMChunk_h_
-#define _Dactyl_FEMChunk_h_
+#ifndef _Dactyl_KChunk_h_
+#define _Dactyl_KChunk_h_
 
 #include <map>
 #include <string>
 #include <vector>
-#include "Dactyl.FEMLine.h"
+#include "Dactyl.KLine.h"
 
 namespace Dactyl::Application
 {
-    class FEMChunk
+    class KChunk
     {
         public:
-            FEMChunk(FEMLine femLine)
+            KChunk(KLine kLine)
             {
-                _level = femLine.Level;
-                _id = femLine.Id;
-                _data = femLine.Data;
-                _type = femLine.Type;
-                _ref = femLine.Ref;
+                _level = kLine.Level;
+                _id = kLine.Id;
+                _data = kLine.Data;
+                _type = kLine.Type;
+                _ref = kLine.Ref;
                 _parent = nullptr;
             };
 
-            void setParentChunk(std::shared_ptr<FEMChunk>& parent)
+            void setParentChunk(std::shared_ptr<KChunk>& parent)
             {
                 _parent = parent;
             };
@@ -52,7 +52,7 @@ namespace Dactyl::Application
                 return _ref;
             };
 
-            std::vector<std::shared_ptr<FEMChunk>>& getSubChunks()
+            std::vector<std::shared_ptr<KChunk>>& getSubChunks()
             {
                 return _subChunks;
             };
@@ -63,53 +63,53 @@ namespace Dactyl::Application
             std::string _type = "";
             std::string _data = "";
             std::string _ref = "";
-            std::shared_ptr<FEMChunk> _parent;
-            std::vector<std::shared_ptr<FEMChunk>> _subChunks;
+            std::shared_ptr<KChunk> _parent;
+            std::vector<std::shared_ptr<KChunk>> _subChunks;
     };
 
-    class FEMChunkSet
+    class KChunkSet
     {
         public:
-            FEMChunkSet() {};
+            KChunkSet() {};
 
-            std::vector<std::shared_ptr<FEMChunk>>& getChunks()
+            std::vector<std::shared_ptr<KChunk>>& getChunks()
             {
                 return _chunks;
             };
 
-            void insertChunk(const std::shared_ptr<FEMChunk>& chunk)
+            void insertChunk(const std::shared_ptr<KChunk>& chunk)
             {
                 _chunks.push_back(chunk);
             };
 
         private:
-            std::vector<std::shared_ptr<FEMChunk>> _chunks;
+            std::vector<std::shared_ptr<KChunk>> _chunks;
     };
 
-    class FEMChunkLevels
+    class KChunkLevels
     {
         public:
-            void set(std::shared_ptr<FEMChunk>& femChunk)
+            void set(std::shared_ptr<KChunk>& kChunk)
             {
-                auto level = femChunk->getLevel();
+                auto level = kChunk->getLevel();
                 auto iter = currentLevelChunks.find(level);
                 if(iter != currentLevelChunks.end())
                 {
                     currentLevelChunks.erase(iter);
                 }
-                currentLevelChunks.insert({level, femChunk});
+                currentLevelChunks.insert({level, kChunk});
             };
 
-            std::shared_ptr<FEMChunk>& getParentChunk(std::shared_ptr<FEMChunk>& femChunk)
+            std::shared_ptr<KChunk>& getParentChunk(std::shared_ptr<KChunk>& kChunk)
             {
-                auto level = femChunk->getLevel();
+                auto level = kChunk->getLevel();
                 auto chunk = currentLevelChunks[level - 1];
                 return chunk;
             };
 
         private:
-            std::map<int, std::shared_ptr<FEMChunk>> currentLevelChunks;
+            std::map<int, std::shared_ptr<KChunk>> currentLevelChunks;
     };
 }
 
-#endif /* _Dactyl.FEMChunk.h_ */
+#endif /* _Dactyl.KChunk.h_ */

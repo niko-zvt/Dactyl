@@ -3,21 +3,21 @@
 #define _Dactyl_FileParser_h_
 
 #include <string>
-#include "Dactyl.FEMChunk.h"
-#include "Dactyl.FEMLine.h"
-#include "Dactyl.ParserResult.h"
+#include "Dactyl.KChunk.h"
+#include "Dactyl.KLine.h"
+#include "Dactyl.KResult.h"
 
 namespace Dactyl::Application
 {
     class FileParser
     {
         public:
-            static ParserResult parseFromFile(std::string filePath);
-            static ParserResult parseLines(std::vector<std::string> lines);
+            static KResult parseFromFile(std::string filePath);
+            static KResult parseLines(std::vector<std::string> lines);
         
         private:
-            static ParserResult parseFEMLines(const std::vector<FEMLine>& femLines);
-            static bool FileParser::getChunks(const std::vector<FEMLine>& femLines, FEMChunkSet& chunkSet);
+            static KResult parseKLines(const std::vector<KLine>& kLines);
+            static bool FileParser::getChunks(const std::vector<KLine>& femLines, KChunkSet& chunkSet);
     };
 }
 

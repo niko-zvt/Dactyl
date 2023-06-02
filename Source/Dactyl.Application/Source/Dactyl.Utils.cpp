@@ -79,4 +79,17 @@ namespace Dactyl::Application
 
         return wordVector;
     }
+
+    double Utils::to_double(std::string str)
+    {
+        std::string::size_type sz; // alias of size_t
+        double result = std::stod(str, &sz);
+        return result;
+    }
+
+    int Utils::to_int(std::string str)
+    {
+        int result = std::stoi(str);
+        return result;
+    }
 }

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _Dactyl_FEMLine_h_
-#define _Dactyl_FEMLine_h_
+#ifndef _Dactyl_KLine_h_
+#define _Dactyl_KLine_h_
 
 #include "Dactyl.Utils.h"
 
@@ -11,10 +11,10 @@
 
 namespace Dactyl::Application
 {
-    class FEMLine
+    class KLine
     {
         private:
-            FEMLine() {};
+            KLine() {};
 
             int Level;
             int Id;
@@ -29,7 +29,7 @@ namespace Dactyl::Application
             std::string getData() { return Data; };
             std::string getRef() { return Ref; };
 
-            FEMLine(int lvl, int id, std::string type, std::string data, std::string ref)
+            KLine(int lvl, int id, std::string type, std::string data, std::string ref)
             {
                 Level = lvl;
                 Id = id;
@@ -38,7 +38,7 @@ namespace Dactyl::Application
                 Ref = ref;
             };
 
-            static std::shared_ptr<FEMLine> parse(int index, std::string line)
+            static std::shared_ptr<KLine> parse(int index, std::string line)
             {
                 // Parse
                 int level = 0;
@@ -81,13 +81,13 @@ namespace Dactyl::Application
                     break;
                 }
 
-                auto l = std::make_shared<FEMLine>(level, id, type, data, ref);
+                auto l = std::make_shared<KLine>(level, id, type, data, ref);
                 return l;
             }
 
-            friend class FEMChunk;
-            friend class FEMChunkLevels;
+            friend class KChunk;
+            friend class KChunkLevels;
     };
 }
 
-#endif /* _Dactyl.FEMLine.h_ */
+#endif /* _Dactyl.KLine.h_ */
