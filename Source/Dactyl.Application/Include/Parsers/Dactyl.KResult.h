@@ -7,6 +7,24 @@
 
 namespace Dactyl::Application
 {
+    struct KProperty
+    {
+        std::string Head;
+        int ID;
+        int SectionID;
+        int MaterialID;
+        int ThermalMaterialID;
+    };
+
+    struct KSection
+    {
+        int ID;
+        double T1;
+        double T2;
+        double T3;
+        double T4;
+    };
+
     struct KMaterial
     {
         int ID;
@@ -36,20 +54,30 @@ namespace Dactyl::Application
     class KResult
     {
         public:
-            void setMaterial(KMaterial material)
+            void insertProperty(KProperty property)
+            {
+                _properties.push_back(property);
+            };
+            void insertSection(KSection section)
+            {
+                _sections.push_back(section);
+            };
+            void insertMaterial(KMaterial material)
             {
                 _materials.push_back(material);
             };
-            void setNode(KNode node)
+            void insertNode(KNode node)
             {
                 _nodes.push_back(node);
             };
-            void setElement(KElement element)
+            void insertElement(KElement element)
             {
                 _elements.push_back(element);
             };
 
         private:
+            std::vector<KProperty> _properties;
+            std::vector<KSection> _sections;
             std::vector<KMaterial> _materials;
             std::vector<KNode> _nodes;
             std::vector<KElement> _elements;
