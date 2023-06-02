@@ -18,13 +18,13 @@ configure_file(
 )
 
 configure_file(
-    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.FEMChunk.h"
-    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.FEMChunk.h"
+    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.KChunk.h"
+    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.KChunk.h"
 )
 
 configure_file(
-    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.FEMLine.h"
-    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.FEMLine.h"
+    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.KLine.h"
+    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.KLine.h"
 )
 
 configure_file(
@@ -33,21 +33,17 @@ configure_file(
 )
 
 configure_file(
-    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.ChunkParser.h"
-    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.ChunkParser.h"
+    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.KChunkParser.h"
+    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.KChunkParser.h"
 )
 
 configure_file(
-    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.ParserResult.h"
-    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.ParserResult.h"
+    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/Dactyl.KResult.h"
+    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Dactyl.KResult.h"
 )
 
-configure_file(
-    "${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Resources/Meshes/task_mesh_homo2.k"
-    "${PROJECT_BINARY_DIR}/${PROJECT_EXE}/task_mesh_homo2.k" 
-    COPYONLY)
-
-file(GLOB_RECURSE HEADER_FILES ${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/*.h)
+file(GLOB_RECURSE HEADER_FILES ${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/*.h
+                               ${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/*.h)
 file(GLOB_RECURSE SOURCE_FILES ${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Source/*.cpp 
                                ${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Source/*.h)
 
@@ -60,6 +56,7 @@ link_directories(${LIB_MODEL})
 target_include_directories(${PROJECT_EXE} 
     PUBLIC 
         ${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/
+        ${PROJECT_BINARY_DIR}/${PROJECT_EXE}/Include/Parsers/
         ${PROJECT_BINARY_DIR}/${LIB_MATH}/Internal/Include/
         ${PROJECT_BINARY_DIR}/${LIB_MODEL}/Include/
 )

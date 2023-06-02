@@ -4,15 +4,15 @@
 #include <vector>
 #include <cassert>
 #include "Dactyl.FileParser.h"
-#include "Dactyl.ChunkParser.h"
-#include "Dactyl.ParserResult.h"
-#include "Dactyl.FEMLine.h"
-#include "Dactyl.FEMChunk.h"
+#include "Dactyl.KChunkParser.h"
+#include "Dactyl.KResult.h"
+#include "Dactyl.KLine.h"
+#include "Dactyl.KChunk.h"
 
 namespace Dactyl::Application
 {
 
-    ParserResult FileParser::parseFromFile(std::string filePath)
+    KResult FileParser::parseFromFile(std::string filePath)
     {
         std::vector<std::string> lines;
         std::ifstream file(filePath);
@@ -26,43 +26,43 @@ namespace Dactyl::Application
         return parseLines(lines);
     }
 
-    ParserResult FileParser::parseLines(std::vector<std::string> lines)
+    KResult FileParser::parseLines(std::vector<std::string> lines)
     {
-        std::vector<FEMLine> femLines;
+        std::vector<KLine> kLines;
 
         int chunkID = 0;
         for (std::string line : lines)
         {
-            auto femLine = FEMLine::parse(chunkID, line);
+            auto kLine = KLine::parse(chunkID, line);
             
-            if(femLine == nullptr)
+            if(kLine == nullptr)
                 continue;
 
-            if (femLine->getType() != "DATA" &&
-                femLine->getData() == "")
+            if (kLine->getType() != "DATA" &&
+                kLine->getData() == "")
             {
                 ++chunkID;
             }
 
-            femLines.push_back(*femLine);
+            kLines.push_back(*kLine);
         }
 
-        return parseFEMLines(femLines);
+        return parseKLines(kLines);
     }   
 
-    ParserResult FileParser::parseFEMLines(const std::vector<FEMLine>& femLines)
+    KResult FileParser::parseKLines(const std::vector<KLine>& kLines)
     {
         // Aliasing constructor for std::shared_ptr (Псевдонимный конструктор)
         // Some magic
-        std::shared_ptr<FEMChunkSet> chunkSet(std::make_shared<FEMChunkSet>());
-        std::shared_ptr<std::vector<std::shared_ptr<FEMChunk>>> link(chunkSet, &chunkSet->getChunks());
-        auto isSuccsses = getChunks(femLines, *chunkSet);
+        std::shared_ptr<KChunkSet> chunkSet(std::make_shared<KChunkSet>());
+        std::shared_ptr<std::vector<std::shared_ptr<KChunk>>> link(chunkSet, &chunkSet->getChunks());
+        auto isSuccsses = getChunks(kLines, *chunkSet);
 
-        if (chunkSet == nullptr)
-        { 
-            int i = 0;
-            // WTF?!
-        }
+        //if (chunkSet == nullptr)
+        //{ 
+        //    int i = 0;
+        //    WTF?!
+        //}
 
         if (link == nullptr)
         {
@@ -70,26 +70,26 @@ namespace Dactyl::Application
             // WTF^2 ?!
         }
 
-        auto result = ChunkParser::parseChunks(*link);
+        auto result = KChunkParser::parseChunks(*link);
 
         return result;
     }
     
-    bool FileParser::getChunks(const std::vector<FEMLine>& femLines, FEMChunkSet& chunkSet)
+    bool FileParser::getChunks(const std::vector<KLine>& kLines, KChunkSet& chunkSet)
     {
-        auto femChunkLevels = std::make_shared<FEMChunkLevels>();
+        auto kChunkLevels = std::make_shared<KChunkLevels>();
         
-        for(FEMLine femLine : femLines)
+        for(KLine kLine : kLines)
         {
-            auto chunk = std::make_shared<FEMChunk>(femLine);
+            auto chunk = std::make_shared<KChunk>(kLine);
 
-            if (femLine.getLevel() == 0)
+            if (kLine.getLevel() == 0)
             {
                 chunkSet.insertChunk(chunk);
             }
             else
             {
-                auto parent = femChunkLevels->getParentChunk(chunk);
+                auto parent = kChunkLevels->getParentChunk(chunk);
                 if(parent != nullptr)
                 {
                     chunk->setParentChunk(parent);
@@ -97,7 +97,7 @@ namespace Dactyl::Application
                 }
             }
 
-            femChunkLevels->set(chunk);
+            kChunkLevels->set(chunk);
         }
 
         return true;

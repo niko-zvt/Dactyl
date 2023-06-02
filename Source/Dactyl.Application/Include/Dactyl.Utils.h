@@ -17,6 +17,10 @@ namespace Dactyl::Application
 
             static std::string to_string(bool value);
             static std::vector<std::string> split_string(std::string str);
+
+            static double to_double(std::string str);
+
+            static int to_int(std::string str);
     };
 }
 
