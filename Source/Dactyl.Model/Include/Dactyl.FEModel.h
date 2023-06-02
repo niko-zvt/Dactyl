@@ -14,7 +14,6 @@
 
 namespace Dactyl::Model
 {
-    
     class FEModel : public IModel
     {
         public:

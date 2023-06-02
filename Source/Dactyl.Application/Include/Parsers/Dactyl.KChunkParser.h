@@ -11,14 +11,14 @@ namespace Dactyl::Application
     class KChunkParser
     {
         public:
-            static KResult parseChunks(std::vector<std::shared_ptr<KChunk>>& inputChunks);
+            static bool parseChunks(const std::vector<std::shared_ptr<KChunk>>& inputChunks, KResult* kResult);
 
         private:
-            static void parseProperty(KChunk& inputChunk, KResult& result);
-            static void parseSection(KChunk& inputChunk, KResult& result);
-            static void parseMaterial(KChunk& inputChunk, KResult& result);
-            static void parseNode(KChunk& inputChunk, KResult& result);
-            static void parseElement(KChunk& inputChunk, KResult& result);
+            static void parseProperty(KChunk& inputChunk, KResult* result);
+            static void parseSection(KChunk& inputChunk, KResult* result);
+            static void parseMaterial(KChunk& inputChunk, KResult* result);
+            static void parseNode(KChunk& inputChunk, KResult* result);
+            static void parseElement(KChunk& inputChunk, KResult* result);
     };
 }
 

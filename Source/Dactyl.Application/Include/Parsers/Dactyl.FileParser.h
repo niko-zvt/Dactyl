@@ -12,12 +12,12 @@ namespace Dactyl::Application
     class FileParser
     {
         public:
-            static KResult parseFromFile(std::string filePath);
-            static KResult parseLines(std::vector<std::string> lines);
+            static bool parseFile(const std::string& filePath, KResult* kResult);
+            static bool parseLines(const std::vector<std::string>& lines, KResult* kResult);
         
         private:
-            static KResult parseKLines(const std::vector<KLine>& kLines);
-            static bool getChunks(const std::vector<KLine>& femLines, KChunkSet& chunkSet);
+            static bool parseKLines(const std::vector<KLine>& kLines, KResult* kResult);
+            static bool getChunks(const std::vector<KLine>& femLines, KChunkSet* chunkSet);
     };
 }
 
