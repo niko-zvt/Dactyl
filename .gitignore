@@ -38,3 +38,7 @@ Debug/*
 debug/*
 Release/*
 release/*
+
+# Temp
+.vscode/*
+.DS_Store
