@@ -13,8 +13,10 @@ namespace Dactyl::Application
         public:
             static KResult parseChunks(std::vector<std::shared_ptr<KChunk>>& inputChunks);
 
+        private:
             static void parseMaterial(KChunk& inputChunk, KResult& result);
             static void parseNode(KChunk& inputChunk, KResult& result);
+            static void parseElement(KChunk& inputChunk, KResult& result);
     };
 }
 

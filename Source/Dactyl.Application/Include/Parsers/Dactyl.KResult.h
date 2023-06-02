@@ -23,6 +23,16 @@ namespace Dactyl::Application
         double Z;
     };
 
+    struct KElement
+    {
+        int ID;
+        int PropertyID;
+        int N1;
+        int N2;
+        int N3;
+        int N4;
+    };
+
     class KResult
     {
         public:
@@ -30,15 +40,19 @@ namespace Dactyl::Application
             {
                 _materials.push_back(material);
             };
-
             void setNode(KNode node)
             {
                 _nodes.push_back(node);
+            };
+            void setElement(KElement element)
+            {
+                _elements.push_back(element);
             };
 
         private:
             std::vector<KMaterial> _materials;
             std::vector<KNode> _nodes;
+            std::vector<KElement> _elements;
     };    
 }
 
