@@ -33,7 +33,7 @@ namespace Dactyl::Application
 
             if (type == "ELEMENT_SHELL")
             {
-
+                KChunkParser::parseElement(*chunk, result);
             }
             
             if(type == "END" || type == "MAT_THERMAL_ISOTROPIC" || 
@@ -112,5 +112,36 @@ namespace Dactyl::Application
         }
     }
 
+    // Element Parser
+    void KChunkParser::parseElement(KChunk& inputChunk, KResult& result)
+    {
+        auto subChunks = inputChunk.getSubChunks();
 
+        for(auto chunk : subChunks)
+        {           
+            auto type = chunk->getType();
+            if (type == "DATA")
+            {
+                auto data = chunk->getData();
+                auto values = Utils::split_string(data);
+
+                const int maxParams = 10; // Max count of *ELEMENT_SHELL params
+
+                // Check container
+                if (values.size() <= 0 || values.size() > maxParams)
+                    continue;
+
+                // Element Mapping
+                auto elementID = Utils::to_int(values[0]);
+                auto propertyID = Utils::to_int(values[1]);
+                auto node1 = Utils::to_int(values[2]);
+                auto node2 = Utils::to_int(values[3]);
+                auto node3 = Utils::to_int(values[4]);
+                auto node4 = Utils::to_int(values[5]);
+
+                KElement element = { elementID, propertyID, node1, node2, node3, node4 };
+                result.setElement(element);
+            }
+        }
+    }
 }
