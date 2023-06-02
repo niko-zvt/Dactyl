@@ -3,27 +3,25 @@
 
 namespace Dactyl::Application
 {
-    KResult KChunkParser::parseChunks(std::vector<std::shared_ptr<KChunk>>& inputChunks)
+    bool KChunkParser::parseChunks(const std::vector<std::shared_ptr<KChunk>>& inputChunks, KResult* kResult)
     {
-        KResult result;
-
         for(auto chunk : inputChunks)
         {           
             auto type = chunk->getType();
             
             if (type == "PART")
             {
-                KChunkParser::parseProperty(*chunk, result);
+                KChunkParser::parseProperty(*chunk, kResult);
             }
             
             if (type == "SECTION_SHELL")
             {
-                KChunkParser::parseSection(*chunk, result);
+                KChunkParser::parseSection(*chunk, kResult);
             }
 
             if (type == "MAT_ELASTIC")
             {
-                KChunkParser::parseMaterial(*chunk, result);
+                KChunkParser::parseMaterial(*chunk, kResult);
             }
 
             if (type == "MAT_THERMAL_ISOTROPIC")
@@ -51,12 +49,12 @@ namespace Dactyl::Application
 
             if (type == "NODE")
             {
-                KChunkParser::parseNode(*chunk, result);
+                KChunkParser::parseNode(*chunk, kResult);
             }
 
             if (type == "ELEMENT_SHELL")
             {
-                KChunkParser::parseElement(*chunk, result);
+                KChunkParser::parseElement(*chunk, kResult);
             }
             
             if(type == "END" || type == "KEYWORD" || type == "TITLE")
@@ -65,11 +63,11 @@ namespace Dactyl::Application
             }
         }
 
-        return result;
+        return true;
     }
 
     // Property Parser
-    void KChunkParser::parseProperty(KChunk& inputChunk, KResult& result)
+    void KChunkParser::parseProperty(KChunk& inputChunk, KResult* result)
     {
         auto cards = inputChunk.getSubChunks();
 
@@ -131,11 +129,11 @@ namespace Dactyl::Application
         }
 
         KProperty property = { head, propertyID, sectionID, materialID, thermalMaterialID };
-        result.insertProperty(property);
+        result->insertProperty(property);
     }
 
     // Section Parser
-    void KChunkParser::parseSection(KChunk& inputChunk, KResult& result)
+    void KChunkParser::parseSection(KChunk& inputChunk, KResult* result)
     {
         auto cards = inputChunk.getSubChunks();
 
@@ -211,11 +209,11 @@ namespace Dactyl::Application
         }
 
         KSection section = { sectionID, thickness1, thickness2, thickness3, thickness4 };
-        result.insertSection(section);
+        result->insertSection(section);
     }
 
     // Material Parser
-    void KChunkParser::parseMaterial(KChunk& inputChunk, KResult& result)
+    void KChunkParser::parseMaterial(KChunk& inputChunk, KResult* result)
     {
         auto subChunks = inputChunk.getSubChunks();
 
@@ -244,13 +242,13 @@ namespace Dactyl::Application
                 auto bulkModulus            = Utils::to_double(values[6]);
 
                 KMaterial material = { materialID, density, elasticModulus, poissonRatio };
-                result.insertMaterial(material);
+                result->insertMaterial(material);
             }
         }
     }
     
     // Node Parser
-    void KChunkParser::parseNode(KChunk& inputChunk, KResult& result)
+    void KChunkParser::parseNode(KChunk& inputChunk, KResult* result)
     {
         auto subChunks = inputChunk.getSubChunks();
 
@@ -275,13 +273,13 @@ namespace Dactyl::Application
                 auto zCoord = Utils::to_double(values[3]);
 
                 KNode node = { nodeID, xCoord, yCoord, zCoord };
-                result.insertNode(node);
+                result->insertNode(node);
             }
         }
     }
 
     // Element Parser
-    void KChunkParser::parseElement(KChunk& inputChunk, KResult& result)
+    void KChunkParser::parseElement(KChunk& inputChunk, KResult* result)
     {
         auto subChunks = inputChunk.getSubChunks();
 
@@ -308,7 +306,7 @@ namespace Dactyl::Application
                 auto node4 = Utils::to_int(values[5]);
 
                 KElement element = { elementID, propertyID, node1, node2, node3, node4 };
-                result.insertElement(element);
+                result->insertElement(element);
             }
         }
     }

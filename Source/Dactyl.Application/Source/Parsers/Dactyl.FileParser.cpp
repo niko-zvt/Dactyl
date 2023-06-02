@@ -12,7 +12,7 @@
 namespace Dactyl::Application
 {
 
-    KResult FileParser::parseFromFile(std::string filePath)
+    bool FileParser::parseFile(const std::string& filePath, KResult* kResult)
     {
         std::vector<std::string> lines;
         std::ifstream file(filePath);
@@ -23,10 +23,11 @@ namespace Dactyl::Application
             lines.push_back(currentLine);
         }
 
-        return parseLines(lines);
+        auto result = parseLines(lines, kResult);
+        return result;
     }
 
-    KResult FileParser::parseLines(std::vector<std::string> lines)
+    bool FileParser::parseLines(const std::vector<std::string>& lines, KResult* kResult)
     {
         std::vector<KLine> kLines;
 
@@ -47,35 +48,19 @@ namespace Dactyl::Application
             kLines.push_back(*kLine);
         }
 
-        return parseKLines(kLines);
+        auto result = parseKLines(kLines, kResult);
+        return result;
     }   
 
-    KResult FileParser::parseKLines(const std::vector<KLine>& kLines)
+    bool FileParser::parseKLines(const std::vector<KLine>& kLines, KResult* kResult)
     {
-        // Aliasing constructor for std::shared_ptr (Псевдонимный конструктор)
-        // Some magic
-        std::shared_ptr<KChunkSet> chunkSet(std::make_shared<KChunkSet>());
-        std::shared_ptr<std::vector<std::shared_ptr<KChunk>>> link(chunkSet, &chunkSet->getChunks());
-        auto isSuccsses = getChunks(kLines, *chunkSet);
-
-        //if (chunkSet == nullptr)
-        //{ 
-        //    int i = 0;
-        //    WTF?!
-        //}
-
-        if (link == nullptr)
-        {
-            int i = 0;
-            // WTF^2 ?!
-        }
-
-        auto result = KChunkParser::parseChunks(*link);
-
-        return result;
+        KChunkSet chunks;
+        bool result1 = getChunks(kLines, &chunks);
+        bool result2 = KChunkParser::parseChunks(chunks.getChunks(), kResult);
+        return result1 && result2;
     }
     
-    bool FileParser::getChunks(const std::vector<KLine>& kLines, KChunkSet& chunkSet)
+    bool FileParser::getChunks(const std::vector<KLine>& kLines, KChunkSet* chunkSet)
     {
         auto kChunkLevels = std::make_shared<KChunkLevels>();
         
@@ -85,7 +70,7 @@ namespace Dactyl::Application
 
             if (kLine.getLevel() == 0)
             {
-                chunkSet.insertChunk(chunk);
+                chunkSet->insertChunk(chunk);
             }
             else
             {
