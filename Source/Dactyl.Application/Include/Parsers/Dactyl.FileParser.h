@@ -17,7 +17,7 @@ namespace Dactyl::Application
         
         private:
             static KResult parseKLines(const std::vector<KLine>& kLines);
-            static bool FileParser::getChunks(const std::vector<KLine>& femLines, KChunkSet& chunkSet);
+            static bool getChunks(const std::vector<KLine>& femLines, KChunkSet& chunkSet);
     };
 }
 
