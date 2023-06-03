@@ -1,49 +1,68 @@
 #include <iostream>
+
+#include "Dactyl.IContext.h"
+#include "Dactyl.GlobalContext.h"
+#include "Dactyl.ContextLocator.h"
+
 #include "Dactyl.Utils.h"
 #include "Dactyl.FileParser.h"
+
 #include "Dactyl.IModel.h"
 #include "Dactyl.ModelLocator.h"
 #include "Dactyl.FEModel.h"
+
 #include "Dactyl.KResult.h"
 
 using Dactyl::Application::Utils;
 
 int main(int argc, char *argv[])
 {
-    // Parse args
+    // 0. Create global context. Create a unique pointer and provide it to the context locator
+    auto gContex = std::make_unique<Dactyl::Application::GlobalContext>();
+    Dactyl::Application::ContextLocator::provideContext(gContex.get());
+
+    // 1. Parse args and update context
     if(argc > 1)
     {
         Utils::parse_args(argc, const_cast<const char**>(argv));
     }
 
-    // TODO: Fix paths 
-    // TEMP File paths
-    #ifdef __linux__ 
-        // Linux path
-    #elif _WIN32
-        const auto pathToKFile = "C:\\Users\\Digimat\\Repos\\Dactyl\\Source\\Dactyl.Application\\Resources\\Meshes\\task_mesh_homo2.k";
-    #elif __APPLE__
-        const auto pathToKFile = "/Users/niko_zvt/Documents/Repos/Dactyl/Source/Dactyl.Application/Resources/Meshes/task_mesh_homo2.k";
-    #else
-        // Do nothing
-    #endif
+    // 2. Check is runable model
+    if (gContex->isRunable() == false)
+    {
+        return 0;
+    }
 
-    // Parse K-file
+    // 3. Try parse K-file from context
     Dactyl::Application::KResult kResult;
-    Dactyl::Application::FileParser::parseFile(pathToKFile, &kResult);
+    auto parsingResult = Dactyl::Application::FileParser::tryParseKFile(&kResult);
+    if(parsingResult == false)
+    {
+        Utils::print_string("\tError! K-file was not found at '" + gContex->getPathToKFile() + "' path or was corrupted.");
+        Utils::print_string("\tTry loading the corrected K-file or build the FE model manually.");
+        return 1;
+    }
 
-    // Create a unique FE model and provide it to the model locator
+    // 4. Create FE model. Create a unique pointer and provide it to the model locator
     auto feModel = std::make_unique<Dactyl::Model::FEModel>();
     Dactyl::Model::ModelLocator::provideModel(feModel.get());
 
-    // Use model
+    // 5. Use model
     Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+
+    // TODO:
+    // 5.1 Build by K-file
+    // 5.2 Set constraints
+    // 5.3 Set loads
+    // 5.4 Calculate
+    
     auto result = model.loadModel();
     auto n = model.getNodesCount();
-
     Utils::print_string(Utils::to_string(result));
-    
     model.print();
 
+    // 6. Get results
+
+    // 7. End
     return 0;
 }
