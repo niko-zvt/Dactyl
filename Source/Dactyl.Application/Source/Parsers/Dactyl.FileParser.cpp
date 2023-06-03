@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <cassert>
+#include "Dactyl.ContextLocator.h"
 #include "Dactyl.FileParser.h"
 #include "Dactyl.KChunkParser.h"
 #include "Dactyl.KResult.h"
@@ -11,6 +12,19 @@
 
 namespace Dactyl::Application
 {
+    bool FileParser::tryParseKFile(KResult* kResult)
+    {
+        // Get context
+        Dactyl::Application::IContext& context = Dactyl::Application::ContextLocator::getContext();
+        auto path = context.getPathToKFile();
+
+        if(path.empty())
+            return false;
+        
+        auto result = parseFile(path, kResult);
+
+        return result;
+    }
 
     bool FileParser::parseFile(const std::string& filePath, KResult* kResult)
     {
@@ -18,12 +32,17 @@ namespace Dactyl::Application
         std::ifstream file(filePath);
         std::string currentLine;
 
-        while (std::getline(file, currentLine))
+        auto result = false;
+
+        if (file.good())
         {
-            lines.push_back(currentLine);
+            while (std::getline(file, currentLine))
+            {
+                lines.push_back(currentLine);
+            }
+            result = parseLines(lines, kResult);
         }
 
-        auto result = parseLines(lines, kResult);
         return result;
     }
 

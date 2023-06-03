@@ -10,10 +10,11 @@ namespace Dactyl::Application
     class Utils
     {
         public:
-            static void print_string(std::string value);
+            static void parse_args(const int argc, const char *argv[]);
+
+            static void print_string(std::string value, bool isEndl = true);
             static void print_help(std::string value);
             static void print_version();
-            static void parse_args(const int argc, const char *argv[]);
 
             static std::string to_string(bool value);
             static std::vector<std::string> split_string(std::string str);
