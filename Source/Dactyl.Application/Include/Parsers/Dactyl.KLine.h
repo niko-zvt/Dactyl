@@ -13,21 +13,12 @@ namespace Dactyl::Application
 {
     class KLine
     {
-        private:
-            KLine() {};
-
-            int Level;
-            int Id;
-            std::string Type;
-            std::string Data;
-            std::string Ref;
-
         public:
-            const int getLevel() { return Level; };
-            const int getID() { return Id; };
-            std::string getType() { return Type; };
-            std::string getData() { return Data; };
-            std::string getRef() { return Ref; };
+            const int getLevel()    { return Level; };
+            const int getID()       { return Id; };
+            std::string getType()   { return Type; };
+            std::string getData()   { return Data; };
+            std::string getRef()    { return Ref; };
 
             KLine(int lvl, int id, std::string type, std::string data, std::string ref)
             {
@@ -84,6 +75,15 @@ namespace Dactyl::Application
                 auto l = std::make_shared<KLine>(level, id, type, data, ref);
                 return l;
             }
+
+        private:
+            KLine() { /* Do nothing */ };
+
+            int Level = -1;
+            int Id = -1;
+            std::string Type = "";
+            std::string Data = "";
+            std::string Ref = "";
 
             friend class KChunk;
             friend class KChunkLevels;
