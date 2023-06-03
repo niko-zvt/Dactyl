@@ -15,6 +15,11 @@ namespace Dactyl::Application
     class KChunk
     {
         public:
+            KChunk()
+            {
+
+            };
+
             KChunk(KLine kLine)
             {
                 _level = kLine.Level;
@@ -108,17 +113,15 @@ namespace Dactyl::Application
                 currentLevelChunks.insert({level, kChunk});
             };
 
-            bool getParentChunk(KChunkPtr* child, KChunkPtr* parent)
+            KChunkPtr* getParentChunk(KChunkPtr* child)
             {
                 auto level = (*child)->getLevel();
                 if(level == 0)
                 {
-                    parent = nullptr;
-                    return false;
+                    return nullptr;
                 }
 
-                parent = &currentLevelChunks[level - 1];
-                return true;
+                return &currentLevelChunks[level - 1];
             };
 
         private:
