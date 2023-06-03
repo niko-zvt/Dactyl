@@ -40,5 +40,6 @@ Release/*
 release/*
 
 # Temp
+.vs/*
 .vscode/*
 .DS_Store
