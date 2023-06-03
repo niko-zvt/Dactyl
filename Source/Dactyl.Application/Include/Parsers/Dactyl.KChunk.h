@@ -60,7 +60,7 @@ namespace Dactyl::Application
                 return _data;
             };
 
-            std::string Ref()
+            std::string getRef()
             {
                 return _ref;
             };
