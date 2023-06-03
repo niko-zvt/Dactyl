@@ -74,12 +74,12 @@ namespace Dactyl::Application
             }
             else
             {
-                KChunkPtr* parent;
-                auto result = kChunkLevels->getParentChunk(&chunk, parent);
-                if(result == true)
+                KChunkPtr parent = std::make_shared<KChunk>();
+                parent = *(kChunkLevels->getParentChunk(&chunk));
+                if(parent != nullptr)
                 {
-                    chunk->setParentChunk(parent);
-                    (*parent)->insertSubChunk(&chunk);
+                    chunk->setParentChunk(&parent);
+                    (*&parent)->insertSubChunk(&chunk);
                 }
             }
 
