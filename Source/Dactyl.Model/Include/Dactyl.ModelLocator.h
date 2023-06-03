@@ -10,46 +10,14 @@ namespace Dactyl::Model
     class ModelLocator
     {
         public:
-            static IModel& getModel()
-            {
-                if(ModelLocator::_model == nullptr)
-                {
-                    ModelLocator::init();
-                }
-
-                return *ModelLocator::_model;
-            }
-    
-            static void provideModel(IModel* model)
-            {
-                if (ModelLocator::_model == nullptr) 
-                {
-                    ModelLocator::init();
-                }
- 
-                if (model == nullptr)
-                {
-                    _model = &ModelLocator::nullModel;
-                    return;
-                }
-
-                ModelLocator::_model = model;
-            }
+            static IModel& getModel();
+            static void provideModel(IModel* model);
     
         private:
-            static void init()
-            {
-                _model = &nullModel;
-            }
- 
+            static void init();
             static NullModel nullModel;
             static IModel* _model;
     };
-    
-    // Init the static class member
-    NullModel ModelLocator::nullModel;
-    IModel* ModelLocator::_model = nullptr;
-
 }
 
 #endif /* _Dactyl.ModelLocator.h_ */
