@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Dactyl.Calc.h"
+#include "Dactyl.KData.h"
 #include "Dactyl.FEModel.h"
 #include "Materials/Dactyl.IMaterial.h"
 #include "Materials/Dactyl.IsotropicMaterial.h"
@@ -10,40 +11,46 @@
 #include "Dofs/Dactyl.IDof.h"
 #include "Elements/Dactyl.IElement.h"
 #include "Elements/Dactyl.LinearTriangularElement.h"
+#include "Dactyl.EntityBuilder.h"
+#include "Dactyl.ModelAliases.h"
 #include <Core>
 #include <Dense>
 #include <vector>
+#include <optional>
 
 namespace Dactyl::Model
 {
-    bool FEModel::loadModel()
+    bool FEModel::loadModel(const std::optional<KData>& kData)
     {
         // Load FE model 
+        auto loadResult = false;
 
-        // Create materials
-        std::shared_ptr<IMaterial> mat = std::make_shared<IsotropicMaterial>(1, 20000, 0.3, "material1");
-        _materials.push_back(mat);
+        // 1. Check KData and build model
+        if (kData)
+        {
+            auto data = kData.value();
 
-        // Create properties
-        std::shared_ptr<IProperty> prop = std::make_shared<ShellProperty>(1, mat->getMaterialID());
-        
-        // Create DOFs
+            // Create materials
+            _materials = EntityBuilder::buildMaterials(data.getMaterials());
 
-        // Create Loads
+            // Create properties
+            _properties = EntityBuilder::buildProperties(data.getProperties(), data.getSections());
 
-        // Create nodes
-        Eigen::Vector3d coord;
-        coord << 1, 2, 3;
-        std::shared_ptr<Node> nod = std::make_shared<Node>(5, coord);
-        _nodes.push_back(nod);
+            // Create nodes
+            _nodes = EntityBuilder::buildNodes(data.getNodes());
 
-        // Create elements
-        std::vector<int> ids;
-        std::shared_ptr<IElement> elem = std::make_shared<LinearTriangularElement>(1, 1, ids);
-        _elements.push_back(elem);
-        return true;
+            // Create elements
+            _elements = EntityBuilder::buildElements(data.getElements());
 
-        // Check model
+            // Create DOFs
+
+            // Create Loads
+
+            // Check model
+            loadResult = true;
+        }
+
+        return loadResult;
     }
 
     bool FEModel::saveModel()
@@ -53,13 +60,7 @@ namespace Dactyl::Model
 
     int FEModel::getNodesCount()
     {
-        int count = 0;
-        std::vector<std::shared_ptr<IElement>>::iterator it;
-        for(it = _elements.begin(); it < _elements.end(); it++)
-        {
-            count += (*it)->getNodesCount();
-        }
-        return count;
+        return _nodes.size();
     }
 
 

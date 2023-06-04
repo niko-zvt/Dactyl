@@ -13,7 +13,7 @@ namespace Dactyl::Model
             {
             }
     
-            virtual bool loadModel() override
+            virtual bool loadModel(const std::optional<KData>& kData) override
             {
                 return false;
             }

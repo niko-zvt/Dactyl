@@ -11,7 +11,7 @@
 #include "Dactyl.ModelLocator.h"
 #include "Dactyl.FEModel.h"
 
-#include "Dactyl.KResult.h"
+#include "Dactyl.KData.h"
 
 using Dactyl::Application::Utils;
 
@@ -34,8 +34,8 @@ int main(int argc, char *argv[])
     }
 
     // 3. Try parse K-file from context
-    Dactyl::Application::KResult kResult;
-    auto parsingResult = Dactyl::Application::FileParser::tryParseKFile(&kResult);
+    Dactyl::Model::KData kData;
+    auto parsingResult = Dactyl::Application::FileParser::tryParseKFile(&kData);
     if(parsingResult == false)
     {
         Utils::print_string("\tError! K-file was not found at '" + gContex->getPathToKFile() + "' path or was corrupted.");
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     // 5.3 Set loads
     // 5.4 Calculate
     
-    auto result = model.loadModel();
+    auto result = model.loadModel(kData);
     auto n = model.getNodesCount();
     Utils::print_string(Utils::to_string(result));
     model.print();
