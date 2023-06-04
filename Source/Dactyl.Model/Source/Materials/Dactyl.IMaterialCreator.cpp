@@ -3,14 +3,14 @@
 
 namespace Dactyl::Model
 {
-    IMaterialCreator* IMaterialCreator::getMaterialCreator(const KMaterial &kMaterial)
+    IMaterialCreatorPtr IMaterialCreator::getMaterialCreator(const KMaterial &kMaterial)
     {
-        IMaterialCreator *creator;
+        IMaterialCreatorPtr creator;
         auto type = kMaterial.Type;
 
         if (type == "elastic_isotropic")
         {
-            creator = new IsotropicMaterialCreator(kMaterial);
+            creator = std::make_shared<IsotropicMaterialCreator>(kMaterial);
         }
         else if (type == "orthotropic")
         {
