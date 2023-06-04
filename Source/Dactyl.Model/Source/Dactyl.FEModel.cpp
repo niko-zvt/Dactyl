@@ -46,8 +46,10 @@ namespace Dactyl::Model
 
             // Create Loads
 
-            // Check model
-            loadResult = true;
+            // Simple check model
+            if(_materials.size() > 0 && _properties.size() > 0 &&
+               _nodes.size() > 0 && _elements.size() > 0)
+                loadResult = true;
         }
 
         return loadResult;
@@ -62,14 +64,6 @@ namespace Dactyl::Model
     {
         return _nodes.size();
     }
-
-
-
-
-
-
-
-
 
 
 

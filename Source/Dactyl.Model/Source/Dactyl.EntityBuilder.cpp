@@ -8,6 +8,7 @@
 #include "Nodes/Dactyl.INode.h"
 #include "Nodes/Dactyl.INodeCreator.h"
 #include "Elements/Dactyl.IElement.h"
+#include "Elements/Dactyl.IElementCreator.h"
 #include "Dactyl.KData.h"
 
 namespace Dactyl::Model
@@ -17,7 +18,7 @@ namespace Dactyl::Model
     {
         std::vector<IMaterialPtr> materials;
 
-        for (auto kMaterial : kMaterials)
+        for (const auto& kMaterial : kMaterials)
         {
             auto creator = IMaterialCreator::getMaterialCreator(kMaterial);
             auto material = creator->buildMaterial();
@@ -31,7 +32,7 @@ namespace Dactyl::Model
     {
         std::vector<IPropertyPtr> properties;
 
-        for (auto kProperty : kProperties)
+        for (const auto& kProperty : kProperties)
         {
             auto sid = kProperty.SectionID;
             auto iterator = std::find_if(kSections.begin(), kSections.end(), [&sid](const KSection& s) { return s.ID == sid; });
@@ -48,7 +49,7 @@ namespace Dactyl::Model
     {
         std::vector<INodePtr> nodes;
 
-        for (auto kNode : kNodes)
+        for (const auto& kNode : kNodes)
         {
             auto creator = INodeCreator::getNodeCreator(kNode);
             auto node = creator->buildNode();
@@ -61,6 +62,13 @@ namespace Dactyl::Model
     std::vector<IElementPtr> EntityBuilder::buildElements(const std::vector<KElement>& kElements)
     {
         std::vector<IElementPtr> elements;
+
+        for (const auto& kElement : kElements)
+        {
+            auto creator = IElementCreator::getElementCreator(kElement);
+            auto element = creator->buildElement();
+            elements.push_back(element);
+        }
 
         return elements;
     }
