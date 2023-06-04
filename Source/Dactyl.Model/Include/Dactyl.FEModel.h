@@ -23,7 +23,8 @@ namespace Dactyl::Model
             {
             };
 
-            virtual bool loadModel(const std::optional<KData>& kData) override;
+            virtual bool loadMesh(const std::optional<KData>& kData) override;
+            virtual bool loadModel() override;
             virtual bool saveModel() override;
             virtual void print() override;
             virtual int getNodesCount() override;

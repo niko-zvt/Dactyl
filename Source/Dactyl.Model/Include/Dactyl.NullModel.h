@@ -13,11 +13,16 @@ namespace Dactyl::Model
             {
             }
     
-            virtual bool loadModel(const std::optional<KData>& kData) override
+            virtual bool loadMesh(const std::optional<KData>& kData) override
             {
                 return false;
             }
-    
+
+            virtual bool loadModel() override
+            {
+                return false;
+            }
+
             virtual bool saveModel() override
             {
                 return false;
