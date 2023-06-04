@@ -1,11 +1,11 @@
 #pragma once
-#ifndef _Dactyl_KResult_h_
-#define _Dactyl_KResult_h_
+#ifndef _Dactyl_KData_h_
+#define _Dactyl_KData_h_
 
 #include <string>
 #include <vector>
 
-namespace Dactyl::Application
+namespace Dactyl::Model
 {
     struct KProperty
     {
@@ -31,6 +31,8 @@ namespace Dactyl::Application
         double Density;
         double ElasticModulus;
         double PoissonRatio;
+        std::string Type;
+        std::string Name;
     };
 
     struct KNode
@@ -51,7 +53,7 @@ namespace Dactyl::Application
         int N4;
     };
 
-    class KResult
+    class KData
     {
         public:
             void insertProperty(KProperty property)
@@ -75,6 +77,27 @@ namespace Dactyl::Application
                 _elements.push_back(element);
             };
 
+            const std::vector<KMaterial>& getMaterials()
+            {
+                return _materials;
+            };
+            const std::vector<KSection>& getSections()
+            {
+                return _sections;
+            };
+            const std::vector<KProperty>& getProperties()
+            {
+                return _properties;
+            };
+            const std::vector<KNode>& getNodes()
+            {
+                return _nodes;
+            };
+            const std::vector<KElement>& getElements()
+            {
+                return _elements;
+            };
+
         private:
             std::vector<KProperty> _properties;
             std::vector<KSection> _sections;
@@ -84,4 +107,4 @@ namespace Dactyl::Application
     };    
 }
 
-#endif /* _Dactyl.KResult.h_ */
+#endif /* _Dactyl.KData.h_ */

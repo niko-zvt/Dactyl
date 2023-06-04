@@ -1,9 +1,11 @@
 #include "Dactyl.KChunkParser.h"
-#include "Dactyl.KResult.h"
+#include "Dactyl.KData.h"
+
+using Dactyl::Model::KData;
 
 namespace Dactyl::Application
 {
-    bool KChunkParser::parseChunks(const std::vector<std::shared_ptr<KChunk>>& inputChunks, KResult* kResult)
+    bool KChunkParser::parseChunks(const std::vector<std::shared_ptr<KChunk>>& inputChunks, KData* kData)
     {
         for(auto chunk : inputChunks)
         {           
@@ -11,17 +13,17 @@ namespace Dactyl::Application
             
             if (type == "PART")
             {
-                KChunkParser::parseProperty(*chunk, kResult);
+                KChunkParser::parseProperty(*chunk, kData);
             }
             
             if (type == "SECTION_SHELL")
             {
-                KChunkParser::parseSection(*chunk, kResult);
+                KChunkParser::parseSection(*chunk, kData);
             }
 
             if (type == "MAT_ELASTIC")
             {
-                KChunkParser::parseMaterial(*chunk, kResult);
+                KChunkParser::parseMaterial(*chunk, kData);
             }
 
             if (type == "MAT_THERMAL_ISOTROPIC")
@@ -49,12 +51,12 @@ namespace Dactyl::Application
 
             if (type == "NODE")
             {
-                KChunkParser::parseNode(*chunk, kResult);
+                KChunkParser::parseNode(*chunk, kData);
             }
 
             if (type == "ELEMENT_SHELL")
             {
-                KChunkParser::parseElement(*chunk, kResult);
+                KChunkParser::parseElement(*chunk, kData);
             }
             
             if(type == "END" || type == "KEYWORD" || type == "TITLE")
@@ -67,7 +69,7 @@ namespace Dactyl::Application
     }
 
     // Property Parser
-    void KChunkParser::parseProperty(KChunk& inputChunk, KResult* result)
+    void KChunkParser::parseProperty(KChunk& inputChunk, KData* kData)
     {
         auto cards = inputChunk.getSubChunks();
 
@@ -128,12 +130,12 @@ namespace Dactyl::Application
             }
         }
 
-        KProperty property = { head, propertyID, sectionID, materialID, thermalMaterialID };
-        result->insertProperty(property);
+        Dactyl::Model::KProperty property = { head, propertyID, sectionID, materialID, thermalMaterialID };
+        kData->insertProperty(property);
     }
 
     // Section Parser
-    void KChunkParser::parseSection(KChunk& inputChunk, KResult* result)
+    void KChunkParser::parseSection(KChunk& inputChunk, KData* kData)
     {
         auto cards = inputChunk.getSubChunks();
 
@@ -208,12 +210,12 @@ namespace Dactyl::Application
             }
         }
 
-        KSection section = { sectionID, thickness1, thickness2, thickness3, thickness4 };
-        result->insertSection(section);
+        Dactyl::Model::KSection section = { sectionID, thickness1, thickness2, thickness3, thickness4 };
+        kData->insertSection(section);
     }
 
     // Material Parser
-    void KChunkParser::parseMaterial(KChunk& inputChunk, KResult* result)
+    void KChunkParser::parseMaterial(KChunk& inputChunk, KData* kData)
     {
         auto subChunks = inputChunk.getSubChunks();
 
@@ -241,14 +243,17 @@ namespace Dactyl::Application
                 auto bendingDampingFactor   = Utils::to_double(values[5]);
                 auto bulkModulus            = Utils::to_double(values[6]);
 
-                KMaterial material = { materialID, density, elasticModulus, poissonRatio };
-                result->insertMaterial(material);
+                auto materialType = "elastic_isotropic";
+                auto materialName = "";
+
+                Dactyl::Model::KMaterial material = { materialID, density, elasticModulus, poissonRatio, materialType, materialName };
+                kData->insertMaterial(material);
             }
         }
     }
     
     // Node Parser
-    void KChunkParser::parseNode(KChunk& inputChunk, KResult* result)
+    void KChunkParser::parseNode(KChunk& inputChunk, KData* kData)
     {
         auto subChunks = inputChunk.getSubChunks();
 
@@ -272,14 +277,14 @@ namespace Dactyl::Application
                 auto yCoord = Utils::to_double(values[2]);
                 auto zCoord = Utils::to_double(values[3]);
 
-                KNode node = { nodeID, xCoord, yCoord, zCoord };
-                result->insertNode(node);
+                Dactyl::Model::KNode node = { nodeID, xCoord, yCoord, zCoord };
+                kData->insertNode(node);
             }
         }
     }
 
     // Element Parser
-    void KChunkParser::parseElement(KChunk& inputChunk, KResult* result)
+    void KChunkParser::parseElement(KChunk& inputChunk, KData* kData)
     {
         auto subChunks = inputChunk.getSubChunks();
 
@@ -305,8 +310,8 @@ namespace Dactyl::Application
                 auto node3 = Utils::to_int(values[4]);
                 auto node4 = Utils::to_int(values[5]);
 
-                KElement element = { elementID, propertyID, node1, node2, node3, node4 };
-                result->insertElement(element);
+                Dactyl::Model::KElement element = { elementID, propertyID, node1, node2, node3, node4 };
+                kData->insertElement(element);
             }
         }
     }

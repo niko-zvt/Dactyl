@@ -10,10 +10,16 @@ namespace Dactyl::Model
 {
     // Aliases for smart pointers
 	class INode;
-	typedef std::shared_ptr<INode> INodePtr;
+	using INodePtr = std::shared_ptr<INode>;
 
 	class IElement;
 	using IElementPtr = std::shared_ptr<IElement>;
+
+	class IMaterial;
+	typedef std::shared_ptr<IMaterial> IMaterialPtr;
+
+	class IProperty;
+	using IPropertyPtr = std::shared_ptr<IProperty>;
 
 	class FEModel;
 	typedef std::unique_ptr<FEModel> FEModelPtr;

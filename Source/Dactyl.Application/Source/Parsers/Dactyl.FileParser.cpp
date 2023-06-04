@@ -6,13 +6,15 @@
 #include "Dactyl.ContextLocator.h"
 #include "Dactyl.FileParser.h"
 #include "Dactyl.KChunkParser.h"
-#include "Dactyl.KResult.h"
+#include "Dactyl.KData.h"
 #include "Dactyl.KLine.h"
 #include "Dactyl.KChunk.h"
 
+using Dactyl::Model::KData;
+
 namespace Dactyl::Application
 {
-    bool FileParser::tryParseKFile(KResult* kResult)
+    bool FileParser::tryParseKFile(KData* kData)
     {
         // Get context
         Dactyl::Application::IContext& context = Dactyl::Application::ContextLocator::getContext();
@@ -21,12 +23,12 @@ namespace Dactyl::Application
         if(path.empty())
             return false;
         
-        auto result = parseFile(path, kResult);
+        auto result = parseFile(path, kData);
 
         return result;
     }
 
-    bool FileParser::parseFile(const std::string& filePath, KResult* kResult)
+    bool FileParser::parseFile(const std::string& filePath, KData* kData)
     {
         std::vector<std::string> lines;
         std::ifstream file(filePath);
@@ -40,13 +42,13 @@ namespace Dactyl::Application
             {
                 lines.push_back(currentLine);
             }
-            result = parseLines(lines, kResult);
+            result = parseLines(lines, kData);
         }
 
         return result;
     }
 
-    bool FileParser::parseLines(const std::vector<std::string>& lines, KResult* kResult)
+    bool FileParser::parseLines(const std::vector<std::string>& lines, KData* kData)
     {
         std::vector<KLine> kLines;
 
@@ -67,15 +69,15 @@ namespace Dactyl::Application
             kLines.push_back(*kLine);
         }
 
-        auto result = parseKLines(kLines, kResult);
+        auto result = parseKLines(kLines, kData);
         return result;
     }   
 
-    bool FileParser::parseKLines(const std::vector<KLine>& kLines, KResult* kResult)
+    bool FileParser::parseKLines(const std::vector<KLine>& kLines, KData* kData)
     {
         KChunkSet chunks;
         bool result1 = getChunks(kLines, &chunks);
-        bool result2 = KChunkParser::parseChunks(chunks.getChunks(), kResult);
+        bool result2 = KChunkParser::parseChunks(chunks.getChunks(), kData);
         return result1 && result2;
     }
     
