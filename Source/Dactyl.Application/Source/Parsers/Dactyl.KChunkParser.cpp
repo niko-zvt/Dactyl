@@ -130,7 +130,8 @@ namespace Dactyl::Application
             }
         }
 
-        Dactyl::Model::KProperty property = { head, propertyID, sectionID, materialID, thermalMaterialID };
+        auto type = "shell";
+        Dactyl::Model::KProperty property = { head, type, propertyID, sectionID, materialID, thermalMaterialID };
         kData->insertProperty(property);
     }
 
