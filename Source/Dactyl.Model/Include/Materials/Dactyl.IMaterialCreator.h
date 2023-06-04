@@ -15,7 +15,7 @@ namespace Dactyl::Model
         
         public:
             virtual IMaterialPtr buildMaterial() = 0;
-            static IMaterialCreator* getMaterialCreator(const KMaterial& kMaterial);
+            static IMaterialCreatorPtr getMaterialCreator(const KMaterial& kMaterial);
     };
 }
 
