@@ -3,6 +3,7 @@
 #include "Nodes/Dactyl.Node.h"
 #include "Dofs/Dactyl.IDof.h"
 #include "Elements/Dactyl.IElement.h"
+#include "Elements/Dactyl.IElementCreator.h"
 #include "Elements/Dactyl.LinearTriangularElement.h"
 #include <Core>
 #include <Dense>
@@ -35,5 +36,16 @@ namespace Dactyl::Model
     int LinearTriangularElement::getNodesCount()
     {
         return _nodesIDs.size();
+    }
+
+    LinearTriangularCreator::LinearTriangularCreator(const KElement &kElement) : IElementCreator(kElement)
+    {
+        std::vector<int> nodesIDs { kElement.N1, kElement.N2, kElement.N3 };
+        _element = std::make_shared<LinearTriangularElement>(kElement.ID, kElement.PropertyID, nodesIDs);
+    }
+
+    IElementPtr LinearTriangularCreator::buildElement()
+    {
+        return _element;
     }
 }

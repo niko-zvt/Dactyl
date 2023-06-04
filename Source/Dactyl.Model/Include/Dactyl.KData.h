@@ -52,6 +52,7 @@ namespace Dactyl::Model
         int N2;
         int N3;
         int N4;
+        std::string Type;
     };
 
     class KData

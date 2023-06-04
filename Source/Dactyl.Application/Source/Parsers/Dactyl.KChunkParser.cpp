@@ -311,7 +311,8 @@ namespace Dactyl::Application
                 auto node3 = Utils::to_int(values[4]);
                 auto node4 = Utils::to_int(values[5]);
 
-                Dactyl::Model::KElement element = { elementID, propertyID, node1, node2, node3, node4 };
+                std::string type = "";
+                Dactyl::Model::KElement element = { elementID, propertyID, node1, node2, node3, node4, type };
                 kData->insertElement(element);
             }
         }
