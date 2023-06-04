@@ -52,6 +52,5 @@ namespace Dactyl::Model
     IMaterialPtr IsotropicMaterialCreator::buildMaterial()
     {
         return _material;
-    };
-
+    }
 }

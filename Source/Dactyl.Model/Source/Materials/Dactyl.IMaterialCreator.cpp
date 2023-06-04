@@ -26,5 +26,5 @@ namespace Dactyl::Model
         }
 
         return creator;
-    };
+    }
 }
