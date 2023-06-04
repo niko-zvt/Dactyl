@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     // 5.3 Set loads
     // 5.4 Calculate
     
-    auto result = model.loadModel(kData);
+    auto result = model.loadMesh(kData);
     auto n = model.getNodesCount();
     Utils::print_string(Utils::to_string(result));
     model.print();

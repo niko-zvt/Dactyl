@@ -20,12 +20,12 @@
 
 namespace Dactyl::Model
 {
-    bool FEModel::loadModel(const std::optional<KData>& kData)
+    bool FEModel::loadMesh(const std::optional<KData>& kData)
     {
-        // Load FE model 
+        // Load FE mesh 
         auto loadResult = false;
 
-        // 1. Check KData and build model
+        // 1. Check KData and build mesh
         if (kData)
         {
             auto data = kData.value();
@@ -46,13 +46,19 @@ namespace Dactyl::Model
 
             // Create Loads
 
-            // Simple check model
-            if(_materials.size() > 0 && _properties.size() > 0 &&
-               _nodes.size() > 0 && _elements.size() > 0)
-                loadResult = true;
         }
 
+        // 2. Simple check mesh
+        if (_materials.size() > 0 && _properties.size() > 0 &&
+            _nodes.size() > 0 && _elements.size() > 0)
+            loadResult = true;
+
         return loadResult;
+    }
+
+    bool FEModel::loadModel()
+    {
+        return false;
     }
 
     bool FEModel::saveModel()
