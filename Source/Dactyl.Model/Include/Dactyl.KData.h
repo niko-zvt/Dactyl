@@ -10,6 +10,7 @@ namespace Dactyl::Model
     struct KProperty
     {
         std::string Head;
+        std::string Type;
         int ID;
         int SectionID;
         int MaterialID;
