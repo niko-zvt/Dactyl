@@ -42,7 +42,6 @@ namespace Dactyl::Model
             std::vector<std::shared_ptr<INode>> _nodes;
             std::vector<std::shared_ptr<IProperty>> _properties;
             std::vector<std::shared_ptr<IElement>> _elements;
-            std::vector<IDof> _dofs;
     };
 }
 
