@@ -6,6 +6,7 @@
 #include <Dense>
 #include <vector>
 #include "Nodes/Dactyl.INode.h"
+#include "Nodes/Dactyl.INodeCreator.h"
 #include "Dofs/Dactyl.IDof.h"
 #include "Dactyl.IModel.h"
 
@@ -24,6 +25,16 @@ namespace Dactyl::Model
         private:
             int _nodeID;
             Eigen::Vector3d _coords;
+    };
+
+    class NodeCreator : public INodeCreator
+    {
+        public:
+            NodeCreator(const KNode& kNode);
+            INodePtr buildNode();
+        
+        private:
+            INodePtr _node;
     };
 }
 

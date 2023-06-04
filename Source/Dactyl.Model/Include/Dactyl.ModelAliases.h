@@ -27,6 +27,9 @@ namespace Dactyl::Model
 	class IPropertyCreator;
 	typedef std::shared_ptr<IPropertyCreator> IPropertyCreatorPtr;
 
+	class INodeCreator;
+	typedef std::shared_ptr<INodeCreator> INodeCreatorPtr;
+
 	class FEModel;
 	typedef std::unique_ptr<FEModel> FEModelPtr;
 }

@@ -6,6 +6,7 @@
 #include "Properties/Dactyl.IProperty.h"
 #include "Properties/Dactyl.IPropertyCreator.h"
 #include "Nodes/Dactyl.INode.h"
+#include "Nodes/Dactyl.INodeCreator.h"
 #include "Elements/Dactyl.IElement.h"
 #include "Dactyl.KData.h"
 
@@ -46,6 +47,13 @@ namespace Dactyl::Model
     std::vector<INodePtr> EntityBuilder::buildNodes(const std::vector<KNode>& kNodes)
     {
         std::vector<INodePtr> nodes;
+
+        for (auto kNode : kNodes)
+        {
+            auto creator = INodeCreator::getNodeCreator(kNode);
+            auto node = creator->buildNode();
+            nodes.push_back(node);
+        }
 
         return nodes;
     }
