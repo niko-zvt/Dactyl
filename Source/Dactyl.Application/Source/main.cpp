@@ -46,20 +46,18 @@ int main(int argc, char *argv[])
     // 4. Create FE model. Create a unique pointer and provide it to the model locator
     auto feModel = std::make_unique<Dactyl::Model::FEModel>();
     Dactyl::Model::ModelLocator::provideModel(feModel.get());
+    // USE MESH AS: Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
 
-    // 5. Use model
-    Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
-
-    // TODO:
     // 5.1 Build by K-file
+    auto result = feModel->loadMesh(kData);
+    
     // 5.2 Set constraints
     // 5.3 Set loads
     // 5.4 Calculate
-    
-    auto result = model.loadMesh(kData);
-    auto n = model.getNodesCount();
+
+    auto n = feModel->getNodesCount();
     Utils::print_string(Utils::to_string(result));
-    model.print();
+    feModel->print();
 
     // 6. Get results
 
