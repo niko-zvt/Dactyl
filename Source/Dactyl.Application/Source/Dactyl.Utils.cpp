@@ -16,7 +16,16 @@ namespace Dactyl::Application
         for(int i = 0; i < argc; i++)
         {
             std::string param_name = argv[i];
-
+            if(i == 0)
+            {
+                std::string fullPath = argv[i];
+                std::size_t found = fullPath.find_last_of("/\\");
+                auto appPath = fullPath.substr(0, found);
+                auto appName = fullPath.substr(found + 1);
+                context.setAppPath(appPath);
+                context.setAppName(appName);
+                continue;
+            }
             if(param_name == "-h" || param_name == "--help")
             {
                 print_help(argv[0]);
@@ -30,6 +39,7 @@ namespace Dactyl::Application
             if (param_name == "-k" || param_name == "--kfile")
             {
                 std::string path = argv[i + 1];
+                // TODO: Full/relative paths - auto fullPath = context.getAppPath() + path;
                 context.setPathToKFile(path);
                 continue;
             }

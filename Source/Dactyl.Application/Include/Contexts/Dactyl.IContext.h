@@ -11,7 +11,14 @@ namespace Dactyl::Application
         public:
             virtual bool isRunable() = 0;
             virtual void makeRunable() = 0;
-            virtual std::string getPathToKFile() = 0;
+            
+            virtual const std::string& getAppName() = 0;
+            virtual void setAppName(const std::string& appName) = 0;
+
+            virtual const std::string& getAppPath() = 0;            
+            virtual void setAppPath(const std::string& appPath) = 0;  
+            
+            virtual const std::string& getPathToKFile() = 0;
             virtual void setPathToKFile(const std::string& path) = 0;
     };
 }

@@ -18,8 +18,28 @@ namespace Dactyl::Application
             {
                 return false;
             }
-    
-            virtual std::string getPathToKFile() override
+
+            virtual const std::string& getAppName() override
+            {
+                return "";
+            }
+
+            virtual void setAppName(const std::string& path) override
+            {
+                // Do nothing
+            }
+
+            virtual const std::string& getAppPath() override
+            {
+                return "";
+            }
+
+            virtual void setAppPath(const std::string& path) override
+            {
+                // Do nothing
+            }
+
+            virtual const std::string& getPathToKFile() override
             {
                 return "";
             }
