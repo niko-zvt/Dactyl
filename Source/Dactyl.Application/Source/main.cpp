@@ -33,8 +33,13 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    // 3. Try parse K-file from context
-    Dactyl::Model::KData kData;
+    // 3. Create FE model. Create a unique pointer and provide it to the model locator
+    auto feModel = std::make_unique<Dactyl::Model::FEModel>();
+    Dactyl::Model::ModelLocator::provideModel(feModel.get());
+    // USE MESH AS: Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+
+    // 4. Try parse K-file from context
+    Dactyl::Model::KData kData; // TODO: Unique ptr?
     auto parsingResult = Dactyl::Application::FileParser::tryParseKFile(&kData);
     if(parsingResult == false)
     {
@@ -43,13 +48,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // 4. Create FE model. Create a unique pointer and provide it to the model locator
-    auto feModel = std::make_unique<Dactyl::Model::FEModel>();
-    Dactyl::Model::ModelLocator::provideModel(feModel.get());
-    // USE MESH AS: Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
-
-    // 5.1 Build by K-file
+    // 5. Build by K-file
     auto result = feModel->loadMesh(kData);
+    // TODO: Delete kData? kData->~KData();
     
     // 5.2 Set constraints
     // 5.3 Set loads
