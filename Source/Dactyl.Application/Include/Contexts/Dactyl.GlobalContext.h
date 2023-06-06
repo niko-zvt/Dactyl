@@ -12,7 +12,11 @@ namespace Dactyl::Application
             GlobalContext() {};
     
             virtual bool isRunable() override;
-            virtual std::string getPathToKFile() override;
+            virtual const std::string& getPathToKFile() override;
+            virtual const std::string& getAppName() override;
+            virtual const std::string& getAppPath() override;
+            virtual void setAppName(const std::string& appName) override;
+            virtual void setAppPath(const std::string& appPath) override;
             virtual void setPathToKFile(const std::string& path) override;
             virtual void makeRunable() override;
 
@@ -21,6 +25,8 @@ namespace Dactyl::Application
         
         private:
             bool _isRunable = false;
+            std::string _appName = "";
+            std::string _appPath = "";
             std::string _pathToKFile = "";
     };
 }
