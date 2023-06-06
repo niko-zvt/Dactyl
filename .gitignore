@@ -42,4 +42,5 @@ release/*
 # Temp
 .vs/*
 .vscode/*
+*.code-workspace
 .DS_Store
