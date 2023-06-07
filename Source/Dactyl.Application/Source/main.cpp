@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
     // USE MESH AS: Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
 
     // 4. Try parse K-file from context
-    Dactyl::Model::KData kData; // TODO: Unique ptr?
-    auto parsingResult = Dactyl::Application::FileParser::tryParseKFile(&kData);
+    auto kData = std::make_unique<Dactyl::Model::KData>();
+    auto parsingResult = Dactyl::Application::FileParser::tryParseKFile(*kData);
     if(parsingResult == false)
     {
         Utils::print_string("\tError! K-file was not found at '" + gContex->getPathToKFile() + "' path or was corrupted.");
@@ -48,9 +48,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // 5. Build by K-file
-    auto result = feModel->loadMesh(kData);
-    // TODO: Delete kData? kData->~KData();
+    // 5. Build by K-file and clear temp data
+    auto result = feModel->loadMesh(*kData);
+    kData->~KData();
     
     // 5.2 Set constraints
     // 5.3 Set loads
