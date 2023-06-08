@@ -13,22 +13,27 @@ namespace Dactyl::Model
         _name = name;
     }
 
-    int ShellProperty::getPropertyID()
+    int ShellProperty::GetPropertyID()
     {
         return _propertyID;
     }
 
-    int ShellProperty::getMaterialID()
+    int ShellProperty::GetMaterialID()
     {
         return _materialID;
     }
 
-    int ShellProperty::getThermalMaterialID()
+    int ShellProperty::GetThermalMaterialID()
     {
         return _thermalMaterialID;
     }
 
-    std::string ShellProperty::getName()
+    std::vector<double> ShellProperty::GetThicknessInNodes()
+    {
+        return _thicknessInNodes;
+    }
+
+    std::string ShellProperty::GetName()
     {
         return _name;
     }

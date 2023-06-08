@@ -81,7 +81,7 @@ namespace Dactyl::Model
         std::vector<Eigen::Triplet<double>> localStiffnessMatrixes;
         for(auto e: _elements)
         {
-            e->CalculateStiffnessMatrix(localStiffnessMatrixes);
+            e->CalculateLocalStiffnessMatrix(localStiffnessMatrixes);
         }
 
         // 2. Build global stiffness matrix
@@ -112,7 +112,20 @@ namespace Dactyl::Model
         return result;
     }
 
+    std::shared_ptr<INode> FEModel::GetNodeByID(int id)
+    {
+        return _nodes.GetByID(id);
+    }   
 
+    std::shared_ptr<IProperty> FEModel::GetPropertyByID(int id)
+    {
+        return _properties.GetByID(id);
+    }
+
+    std::shared_ptr<IMaterial> FEModel::GetMaterialByID(int id)
+    {
+        return _materials.GetByID(id);
+    }
 
     void FEModel::Print()
     {

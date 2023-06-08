@@ -10,9 +10,9 @@ namespace Dactyl::Model
     class IMaterial
     {
         public:
-            virtual int getMaterialID() = 0;
-            virtual std::string getMaterialName() = 0;
-            virtual Eigen::MatrixXd getElasticityMatrix() = 0;
+            virtual int GetMaterialID() = 0;
+            virtual std::string GetMaterialName() = 0;
+            virtual Eigen::MatrixXd GetElasticityMatrix() = 0;
         
         private:
             virtual void calclulateElasticityMatrix() = 0;

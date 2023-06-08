@@ -15,7 +15,7 @@ namespace Dactyl::Model
         public:
             virtual int GetElementID() = 0;
             virtual int GetPropertyID() = 0;
-            virtual void CalculateStiffnessMatrix(std::vector<Eigen::Triplet<double>>& localStiffnessMatrixes) = 0;
+            virtual void CalculateLocalStiffnessMatrix(std::vector<Eigen::Triplet<double>>& subEnsembles) = 0;
             virtual int GetNodesCount() = 0;
     };
 }

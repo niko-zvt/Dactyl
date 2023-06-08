@@ -18,9 +18,9 @@ namespace Dactyl::Model
     {
         public:
             IsotropicMaterial(int id, double elasticModulus, double poissonRatio, double density, std::string name = "");
-            virtual int getMaterialID() override;
-            virtual std::string getMaterialName();
-            virtual Eigen::MatrixXd getElasticityMatrix() override;
+            virtual int GetMaterialID() override;
+            virtual std::string GetMaterialName();
+            virtual Eigen::MatrixXd GetElasticityMatrix() override;
     
             IsotropicMaterial(IsotropicMaterial const &) = delete;
             void operator=(IsotropicMaterial const &) = delete;

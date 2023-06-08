@@ -11,10 +11,11 @@ namespace Dactyl::Model
     {
         public:
             ShellProperty(int ID, int materialID, int thermalMaterialID, std::vector<double> thicknessInNodes, std::string name);
-            virtual int getPropertyID() override;
-            virtual int getMaterialID() override;
-            virtual int getThermalMaterialID() override;
-            virtual std::string getName() override;
+            virtual int GetPropertyID() override;
+            virtual int GetMaterialID() override;
+            virtual int GetThermalMaterialID() override;
+            virtual std::vector<double> GetThicknessInNodes() override;
+            virtual std::string GetName() override;
             ShellProperty(ShellProperty const&) = delete;
             void operator=(ShellProperty const&) = delete;
 
