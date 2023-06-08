@@ -12,27 +12,32 @@ namespace Dactyl::Model
             NullModel()
             {
             }
-    
-            virtual bool loadMesh(const std::optional<KData>& kData) override
+
+            virtual bool Calculate() override
             {
                 return false;
             }
 
-            virtual bool loadModel() override
+            virtual bool LoadMesh(const std::optional<KData>& kData) override
             {
                 return false;
             }
 
-            virtual bool saveModel() override
+            virtual bool LoadModel() override
             {
                 return false;
             }
 
-            virtual void print() override
+            virtual bool SaveModel() override
+            {
+                return false;
+            }
+
+            virtual void Print() override
             {
             }
 
-            virtual int getNodesCount() override
+            virtual int GetNodesCount() override
             {
                 return -1;
             }

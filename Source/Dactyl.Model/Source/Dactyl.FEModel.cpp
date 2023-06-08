@@ -13,6 +13,7 @@
 #include "Elements/Dactyl.LinearTriangularElement.h"
 #include "Dactyl.EntityBuilder.h"
 #include "Dactyl.ModelAliases.h"
+#include <Sparse>
 #include <Core>
 #include <Dense>
 #include <vector>
@@ -20,7 +21,7 @@
 
 namespace Dactyl::Model
 {
-    bool FEModel::loadMesh(const std::optional<KData>& kData)
+    bool FEModel::LoadMesh(const std::optional<KData>& kData)
     {
         // Load FE mesh 
         auto loadResult = false;
@@ -43,9 +44,10 @@ namespace Dactyl::Model
             _elements = EntityBuilder::buildElements(data.getElements());
 
             // Create DOFs
+            // Do nothing. Manual build
 
             // Create Loads
-
+            // Do nothing. Manual build
         }
 
         // 2. Simple check mesh
@@ -56,27 +58,63 @@ namespace Dactyl::Model
         return loadResult;
     }
 
-    bool FEModel::loadModel()
+    bool FEModel::LoadModel()
     {
         return false;
     }
 
-    bool FEModel::saveModel()
+    bool FEModel::SaveModel()
     {
         return false;
     }
 
-    int FEModel::getNodesCount()
+    int FEModel::GetNodesCount()
     {
         return _nodes.size();
     }
 
+    bool FEModel::BuildGlobalEnsemble()
+    {
+        auto result = false;
+
+        // 1. Calculate all local stiffness matrixes
+        std::vector<Eigen::Triplet<double>> localStiffnessMatrixes;
+        for(auto e: _elements)
+        {
+            e->CalculateStiffnessMatrix(localStiffnessMatrixes);
+        }
+
+        // 2. Build global stiffness matrix
+        int doubleNodesSize = 2 * GetNodesCount();
+        auto globalStiffnessMatrix = std::make_unique<Eigen::SparseMatrix<double>>(doubleNodesSize, doubleNodesSize);
+        globalStiffnessMatrix->setFromTriplets(localStiffnessMatrixes.begin(), localStiffnessMatrixes.end());
+
+        // 3. Move global stiffness matrix to model
+        _globalStiffnessMatrix = std::move(globalStiffnessMatrix);
+
+        // 4. Check global stiffness matrix
+        // TODO
+
+        // 5. Build DOFs
+        // TODO
+
+        result = false; // TODO -> true
+
+        return result;
+    }
+
+    bool FEModel::Calculate()
+    {
+        auto result = false;
+
+        result = BuildGlobalEnsemble();
+
+        return result;
+    }
 
 
 
-
-
-    void FEModel::print()
+    void FEModel::Print()
     {
         hello_model();
     }

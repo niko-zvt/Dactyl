@@ -2,9 +2,11 @@
 #include "Nodes/Dactyl.INode.h"
 #include "Nodes/Dactyl.Node.h"
 #include "Dofs/Dactyl.IDof.h"
+#include "Dactyl.ModelLocator.h"
 #include "Elements/Dactyl.IElement.h"
 #include "Elements/Dactyl.IElementCreator.h"
 #include "Elements/Dactyl.LinearTriangularElement.h"
+#include <Sparse>
 #include <Core>
 #include <Dense>
 #include <vector>
@@ -18,22 +20,23 @@ namespace Dactyl::Model
         _nodesIDs = nodesIDs;
     }
 
-    int LinearTriangularElement::getElementID()
+    int LinearTriangularElement::GetElementID()
     {
         return _elementID;
     }
 
-    int LinearTriangularElement::getPropertyID()
+    int LinearTriangularElement::GetPropertyID()
     {
         return _propertyID;
     }
 
-    void LinearTriangularElement::calculateStiffnessMatrix()
+    void LinearTriangularElement::CalculateStiffnessMatrix(std::vector<Eigen::Triplet<double>>& localStiffnessMatrixes)
     {
-
+        Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+        auto D = 0.0;
     }
 
-    int LinearTriangularElement::getNodesCount()
+    int LinearTriangularElement::GetNodesCount()
     {
         return _nodesIDs.size();
     }

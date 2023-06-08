@@ -2,6 +2,7 @@
 #ifndef _Dactyl_FEModel_h_
 #define _Dactyl_FEModel_h_
 #include "Dactyl.ModelAliases.h"
+#include <Sparse>
 #include <Core>
 #include <Dense>
 #include <vector>
@@ -22,14 +23,15 @@ namespace Dactyl::Model
             FEModel()
             {
             };
-
-            virtual bool loadMesh(const std::optional<KData>& kData) override;
-            virtual bool loadModel() override;
-            virtual bool saveModel() override;
-            virtual void print() override;
-            virtual int getNodesCount() override;
+            virtual bool Calculate() override;
+            virtual bool LoadMesh(const std::optional<KData>& kData) override;
+            virtual bool LoadModel() override;
+            virtual bool SaveModel() override;
+            virtual void Print() override;
+            virtual int GetNodesCount() override;
        
         private:
+            bool BuildGlobalEnsemble();
             // TODO: Delete
             void print_matrix(Eigen::MatrixX3d m);
             void hello_model();
@@ -43,6 +45,8 @@ namespace Dactyl::Model
             std::vector<std::shared_ptr<INode>> _nodes;
             std::vector<std::shared_ptr<IProperty>> _properties;
             std::vector<std::shared_ptr<IElement>> _elements;
+
+            std::unique_ptr<Eigen::SparseMatrix<double>> _globalStiffnessMatrix;
     };
 }
 

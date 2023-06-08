@@ -11,6 +11,7 @@
 #include "Elements/Dactyl.IElement.h"
 #include "Elements/Dactyl.IElementCreator.h"
 #include "Dactyl.IModel.h"
+#include <Sparse>
 
 namespace Dactyl::Model
 {
@@ -19,10 +20,10 @@ namespace Dactyl::Model
         public:
             LinearTriangularElement(int eid, int pid, const std::vector<int> _nodesIDs);
 
-            virtual int getElementID() override;
-            virtual int getPropertyID() override;
-            virtual void calculateStiffnessMatrix() override;
-            virtual int getNodesCount() override;
+            virtual int GetElementID() override;
+            virtual int GetPropertyID() override;
+            virtual void CalculateStiffnessMatrix(std::vector<Eigen::Triplet<double>>& localStiffnessMatrixes) override;
+            virtual int GetNodesCount() override;
 
             LinearTriangularElement(LinearTriangularElement const&) = delete;
             void operator=(LinearTriangularElement const&) = delete;
