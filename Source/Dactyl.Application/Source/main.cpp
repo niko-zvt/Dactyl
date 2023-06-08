@@ -49,16 +49,19 @@ int main(int argc, char *argv[])
     }
 
     // 5. Build by K-file and clear temp data
-    auto result = feModel->loadMesh(*kData);
+    auto loadResult = feModel->LoadMesh(*kData);
     kData->~KData();
     
     // 5.2 Set constraints
-    // 5.3 Set loads
-    // 5.4 Calculate
 
-    auto n = feModel->getNodesCount();
-    Utils::print_string(Utils::to_string(result));
-    feModel->print();
+    // 5.3 Set loads
+    
+    // 5.4 Calculate
+    auto calcResult = feModel->Calculate();
+
+    auto n = feModel->GetNodesCount();
+    Utils::print_string(Utils::to_string(calcResult));
+    feModel->Print();
 
     // 6. Get results
 

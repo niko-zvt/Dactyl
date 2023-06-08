@@ -10,11 +10,12 @@ namespace Dactyl::Model
     class IModel
     {
         public:
-            virtual bool loadModel() = 0;
-            virtual bool saveModel() = 0;
-            virtual bool loadMesh(const std::optional<KData>& kData) = 0;
-            virtual void print() = 0;
-            virtual int getNodesCount() = 0;
+            virtual bool Calculate() = 0;
+            virtual bool LoadModel() = 0;
+            virtual bool SaveModel() = 0;
+            virtual bool LoadMesh(const std::optional<KData>& kData) = 0;
+            virtual void Print() = 0;
+            virtual int GetNodesCount() = 0;
     };
 }
 
