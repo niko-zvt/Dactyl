@@ -13,12 +13,22 @@ namespace Dactyl::Model
         _coords = coords;
     }
 
-    int Node::getNodeID()
+    int Node::GetNodeID()
     {
         return _nodeID;
     }
 
-    Eigen::Vector3d Node::getCoords()
+    int Node::GetGlobalNodeID()
+    {
+        return _globalNodeID;
+    }
+
+    void Node::SetGlobalNodeID(int id)
+    {
+        _globalNodeID = id;
+    }
+
+    Eigen::Vector3d Node::GetCoords()
     {
         return _coords;
     }

@@ -10,8 +10,10 @@ namespace Dactyl::Model
     class INode
     {
         public:
-            virtual int getNodeID() = 0;
-            virtual Eigen::Vector3d getCoords() = 0;
+            virtual int GetNodeID() = 0;
+            virtual int GetGlobalNodeID() = 0;
+            virtual void SetGlobalNodeID(int id) = 0;
+            virtual Eigen::Vector3d GetCoords() = 0;
     };
 }
 

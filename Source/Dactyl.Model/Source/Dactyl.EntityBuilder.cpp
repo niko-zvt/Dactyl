@@ -14,23 +14,23 @@
 namespace Dactyl::Model
 {
 
-    std::vector<IMaterialPtr> EntityBuilder::buildMaterials(const std::vector<KMaterial>& kMaterials)
+    MaterialSet EntityBuilder::buildMaterials(const std::vector<KMaterial>& kMaterials)
     {
-        std::vector<IMaterialPtr> materials;
+        MaterialSet materials;
 
         for (const auto& kMaterial : kMaterials)
         {
             auto creator = IMaterialCreator::getMaterialCreator(kMaterial);
             auto material = creator->buildMaterial();
-            materials.push_back(material);
+            materials.Add(material);
         }
 
         return materials;
     }
 
-    std::vector<IPropertyPtr> EntityBuilder::buildProperties(const std::vector<KProperty>& kProperties, const std::vector<KSection>& kSections)
+    PropertySet EntityBuilder::buildProperties(const std::vector<KProperty>& kProperties, const std::vector<KSection>& kSections)
     {
-        std::vector<IPropertyPtr> properties;
+        PropertySet properties;
 
         for (const auto& kProperty : kProperties)
         {
@@ -39,21 +39,24 @@ namespace Dactyl::Model
             auto kSection = *iterator;
             auto creator = IPropertyCreator::getPropertyCreator(kProperty, kSection);
             auto property = creator->buildProperty();
-            properties.push_back(property);
+            properties.Add(property);
         }
 
         return properties;
     }
     
-    std::vector<INodePtr> EntityBuilder::buildNodes(const std::vector<KNode>& kNodes)
+    NodeSet EntityBuilder::buildNodes(const std::vector<KNode>& kNodes)
     {
-        std::vector<INodePtr> nodes;
+        NodeSet nodes;
 
+        int globalNodeID = 0;
         for (const auto& kNode : kNodes)
         {
             auto creator = INodeCreator::getNodeCreator(kNode);
             auto node = creator->buildNode();
-            nodes.push_back(node);
+            node->SetGlobalNodeID(globalNodeID);
+            nodes.Add(node);
+            globalNodeID++;
         }
 
         return nodes;

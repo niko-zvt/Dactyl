@@ -22,17 +22,26 @@ namespace Dactyl::Model
 
             virtual int GetElementID() override;
             virtual int GetPropertyID() override;
-            virtual void CalculateStiffnessMatrix(std::vector<Eigen::Triplet<double>>& localStiffnessMatrixes) override;
+            virtual void CalculateLocalStiffnessMatrix(std::vector<Eigen::Triplet<double>>& subEnsembles) override;
             virtual int GetNodesCount() override;
 
             LinearTriangularElement(LinearTriangularElement const&) = delete;
             void operator=(LinearTriangularElement const&) = delete;
 
         private:
+            Eigen::Matrix3d BuildTwoAreaMatrix();
+            Eigen::Matrix3d BuildElasticityMatrix();
+            Eigen::Matrix<double, 3, 6> BuildGradientMatrix();
+            double GetAverageThicknessOfElement();
+
+        private:
             int _elementID = -1;
             int _propertyID = -1;
             std::vector<int> _nodesIDs;
-            Eigen::Matrix<double, 3, 6> _B;
+
+            Eigen::Matrix3d _A;             // Two Area Matrix
+            Eigen::Matrix3d _D;             // Elasticity Matrix
+            Eigen::Matrix<double, 3, 6> _B; // Gradient Matrix
     };
 
     class LinearTriangularCreator : public IElementCreator

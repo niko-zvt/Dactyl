@@ -9,10 +9,11 @@ namespace Dactyl::Model
     class IProperty
     {
         public:
-            virtual int getPropertyID() = 0;
-            virtual int getMaterialID() = 0;
-            virtual int getThermalMaterialID() = 0;
-            virtual std::string getName() = 0;
+            virtual int GetPropertyID() = 0;
+            virtual int GetMaterialID() = 0;
+            virtual int GetThermalMaterialID() = 0;
+            virtual std::vector<double> GetThicknessInNodes() = 0;
+            virtual std::string GetName() = 0;
     };
 }
 

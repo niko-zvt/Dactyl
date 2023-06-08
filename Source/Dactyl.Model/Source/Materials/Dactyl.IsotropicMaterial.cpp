@@ -16,17 +16,17 @@ namespace Dactyl::Model
         calclulateElasticityMatrix();
     }
 
-    int IsotropicMaterial::getMaterialID()
+    int IsotropicMaterial::GetMaterialID()
     {
         return _materialID;
     }
 
-    std::string IsotropicMaterial::getMaterialName()
+    std::string IsotropicMaterial::GetMaterialName()
     {
         return _materialName;
     }
 
-    Eigen::MatrixXd IsotropicMaterial::getElasticityMatrix()
+    Eigen::MatrixXd IsotropicMaterial::GetElasticityMatrix()
     {
         return _elasticityMatrix;
     }

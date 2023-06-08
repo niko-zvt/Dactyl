@@ -13,6 +13,8 @@
 
 namespace Dactyl::Model
 {
+    class INode;
+
     LinearTriangularElement::LinearTriangularElement(int eid, int pid, std::vector<int> nodesIDs)
     {
         _elementID = eid;
@@ -30,10 +32,94 @@ namespace Dactyl::Model
         return _propertyID;
     }
 
-    void LinearTriangularElement::CalculateStiffnessMatrix(std::vector<Eigen::Triplet<double>>& localStiffnessMatrixes)
+    void LinearTriangularElement::CalculateLocalStiffnessMatrix(std::vector<Eigen::Triplet<double>>& subEnsembles)
+    {
+        _D = BuildElasticityMatrix();
+        _A = BuildTwoAreaMatrix();
+        _B = BuildGradientMatrix();
+        auto t = GetAverageThicknessOfElement();
+        Eigen::Matrix<double, 6, 6> K = _B.transpose() * _D * _B * _A.determinant() * 0.5 * t;
+        
+        // Assembly
+        Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+        for (int i = 0; i < 3; i++)
+    	{
+    		for (int j = 0; j < 3; j++)
+    		{
+                /*
+                A triplets using a vector of node indexes to determine its position in the global stiffness matrix.
+                We have two sets of indices [i, j], one local for the array of elements, the other global for the ensemble.
+                */
+                int g1 = model.GetNodeByID(_nodesIDs[i])->GetGlobalNodeID();
+                int g2 = model.GetNodeByID(_nodesIDs[j])->GetGlobalNodeID();
+    			Eigen::Triplet<double> var11(2 * g1 + 0, 2 * g2 + 0, K(2 * i + 0, 2 * j + 0));
+    			Eigen::Triplet<double> var12(2 * g1 + 0, 2 * g2 + 1, K(2 * i + 0, 2 * j + 1));
+    			Eigen::Triplet<double> var21(2 * g1 + 1, 2 * g2 + 0, K(2 * i + 1, 2 * j + 0));
+    			Eigen::Triplet<double> var22(2 * g1 + 1, 2 * g2 + 1, K(2 * i + 1, 2 * j + 1));
+
+    			subEnsembles.push_back(var11);
+    			subEnsembles.push_back(var12);
+    			subEnsembles.push_back(var21);
+    			subEnsembles.push_back(var22);
+    		}
+    	}
+    }
+
+    double LinearTriangularElement::GetAverageThicknessOfElement()
     {
         Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
-        auto D = 0.0;
+        auto property = model.GetPropertyByID(_propertyID);
+        auto thicknesses = property->GetThicknessInNodes();
+        double averageThickness = 0.0;
+        for(auto t : thicknesses)
+        {
+            averageThickness += t;
+        }
+        return averageThickness / thicknesses.size();
+    }
+
+    Eigen::Matrix<double, 3, 6> LinearTriangularElement::BuildGradientMatrix()
+    {
+        auto inverseA = _A.inverse();
+        Eigen::Matrix<double, 3, 6> gradMatrix;
+        for (int i = 0; i < 3; i++)
+        {
+            gradMatrix(0, 2 * i + 0) = inverseA(1, i);
+        	gradMatrix(0, 2 * i + 1) = 0.0f;
+        	gradMatrix(1, 2 * i + 0) = 0.0f;
+        	gradMatrix(1, 2 * i + 1) = inverseA(2, i);
+        	gradMatrix(2, 2 * i + 0) = inverseA(2, i);
+        	gradMatrix(2, 2 * i + 1) = inverseA(1, i);
+        }
+        return gradMatrix;
+    }
+
+    Eigen::Matrix3d LinearTriangularElement::BuildElasticityMatrix()
+    {
+        Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+        auto property = model.GetPropertyByID(_propertyID);
+        auto material = model.GetMaterialByID(property->GetMaterialID());
+        auto elasticMatrix = material->GetElasticityMatrix();
+        return elasticMatrix; 
+    }
+
+    Eigen::Matrix3d LinearTriangularElement::BuildTwoAreaMatrix()
+    {
+        Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+        Eigen::Vector3d xCoordsOfNodes;
+        Eigen::Vector3d yCoordsOfNodes;
+
+        for(int i=0; i < 3; i++)
+        {
+            auto node = model.GetNodeByID(_nodesIDs[i]);
+            auto coords = node->GetCoords();
+            xCoordsOfNodes[i] = coords[0];
+            yCoordsOfNodes[i] = coords[1];
+        }
+
+        Eigen::Matrix3d twoAreaMatrix;
+        twoAreaMatrix << Eigen::Vector3d(1, 1, 1), xCoordsOfNodes, yCoordsOfNodes;
+        return twoAreaMatrix;
     }
 
     int LinearTriangularElement::GetNodesCount()

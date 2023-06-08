@@ -7,6 +7,10 @@
 
 namespace Dactyl::Model
 {
+    class INode;
+    class IProperty;
+    class IMaterial;
+    
     class IModel
     {
         public:
@@ -16,6 +20,9 @@ namespace Dactyl::Model
             virtual bool LoadMesh(const std::optional<KData>& kData) = 0;
             virtual void Print() = 0;
             virtual int GetNodesCount() = 0;
+            virtual std::shared_ptr<INode> GetNodeByID(int id) = 0;
+            virtual std::shared_ptr<IProperty> GetPropertyByID(int id) = 0;
+            virtual std::shared_ptr<IMaterial> GetMaterialByID(int id) = 0;
     };
 }
 

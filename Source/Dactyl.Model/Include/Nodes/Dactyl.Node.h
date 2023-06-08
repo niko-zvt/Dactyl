@@ -16,15 +16,18 @@ namespace Dactyl::Model
     {
         public:
             Node(int id, Eigen::Vector3d coords);
-            virtual int getNodeID() override;
-            virtual Eigen::Vector3d getCoords() override;
+            virtual int GetNodeID() override;
+            virtual int GetGlobalNodeID() override;
+            virtual void SetGlobalNodeID(int id) override;
+            virtual Eigen::Vector3d GetCoords() override;
 
             Node(Node const&) = delete;
             void operator=(Node const&) = delete;
 
         private:
-            int _nodeID;
-            Eigen::Vector3d _coords;
+            int _globalNodeID = -1;
+            int _nodeID = -1;
+            Eigen::Vector3d _coords{0,0,0};
     };
 
     class NodeCreator : public INodeCreator
