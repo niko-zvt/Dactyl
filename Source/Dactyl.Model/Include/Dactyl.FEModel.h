@@ -10,7 +10,6 @@
 #include "Materials/Dactyl.IMaterial.h"
 #include "Properties/Dactyl.IProperty.h"
 #include "Nodes/Dactyl.INode.h"
-#include "Dofs/Dactyl.IDof.h"
 #include "Elements/Dactyl.IElement.h"
 #include "Dactyl.IModel.h"
 #include "Sets/Dactyl.NodeSet.h"
@@ -32,14 +31,22 @@ namespace Dactyl::Model
             virtual bool LoadModel() override;
             virtual bool SaveModel() override;
             virtual void Print() override;
-            virtual int GetNodesCount() override;
 
+            virtual bool SetConstraintsByCoords(std::any xCoord, std::any yCoord, ConstraintType type, double tolerance) override;
+            virtual bool SetDistributedForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) override;
+
+            virtual int GetNodesCount() override;
             virtual std::shared_ptr<INode> GetNodeByID(int id) override;
             virtual std::shared_ptr<IProperty> GetPropertyByID(int id) override;
             virtual std::shared_ptr<IMaterial> GetMaterialByID(int id) override;
        
         private:
             bool BuildGlobalEnsemble();
+            bool ApplyConstraints();
+            bool SolveLinearSystem();
+            Eigen::VectorXd BuildExternalForcesVector();
+            void SetConstraintsToGlobalStiffnessMatrix(Eigen::SparseMatrix<double>::InnerIterator& it, int globalID);
+            bool MoveDisplacementsToNodes(const Eigen::VectorXd& displacements);
             // TODO: Delete
             void print_matrix(Eigen::MatrixX3d m);
             void hello_model();
@@ -55,6 +62,9 @@ namespace Dactyl::Model
             std::vector<std::shared_ptr<IElement>> _elements;
 
             std::unique_ptr<Eigen::SparseMatrix<double>> _globalStiffnessMatrix;
+            std::unique_ptr<Eigen::VectorXd> _externalForcesVector;
+            std::unique_ptr<Eigen::VectorXd> _displacements;
+            NodeSet _nodesWithConstraints;
     };
 }
 

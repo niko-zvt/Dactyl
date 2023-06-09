@@ -7,7 +7,6 @@
 #include <vector>
 #include "Nodes/Dactyl.Node.h"
 #include "Nodes/Dactyl.INode.h"
-#include "Dofs/Dactyl.IDof.h"
 #include "Elements/Dactyl.IElement.h"
 #include "Elements/Dactyl.IElementCreator.h"
 #include "Dactyl.IModel.h"
