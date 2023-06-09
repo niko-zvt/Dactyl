@@ -88,9 +88,7 @@ namespace Dactyl::Model
         int doubleNodesSize = 2 * GetNodesCount();
         auto globalStiffnessMatrix = std::make_unique<Eigen::SparseMatrix<double>>(doubleNodesSize, doubleNodesSize);
         globalStiffnessMatrix->setFromTriplets(localStiffnessMatrixes.begin(), localStiffnessMatrixes.end());
-
-        // 3. Move global stiffness matrix to model
-        _globalStiffnessMatrix = std::move(globalStiffnessMatrix);
+        _globalStiffnessMatrix = std::move(globalStiffnessMatrix); // Move global stiffness matrix to model
 
         // 4. Check global stiffness matrix
         // TODO
