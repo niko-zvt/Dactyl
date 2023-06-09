@@ -49,14 +49,19 @@ int main(int argc, char *argv[])
     }
 
     // 5. Build by K-file and clear temp data
-    auto loadResult = feModel->LoadMesh(*kData);
+    auto openResult = feModel->LoadMesh(*kData);
     kData->~KData();
     
-    // 5.2 Set constraints
-
-    // 5.3 Set loads
+    // 6 Set constraints
+    std::any any;
+    auto tolerance = 0.001;
+    auto yConstraintResult = feModel->SetConstraintsByCoords(any, 0.0, Dactyl::Model::ConstraintType::FixUY, tolerance);
+    auto xConstraintResult = feModel->SetConstraintsByCoords(0.0, any, Dactyl::Model::ConstraintType::FixUX, tolerance);
     
-    // 5.4 Calculate
+    // 7 Set loads
+    auto forceResult = feModel->SetDistributedForceByCoords(0.15, any, 1600.0, 0.0, tolerance);
+    
+    // 8 Calculate
     auto calcResult = feModel->Calculate();
 
     auto n = feModel->GetNodesCount();

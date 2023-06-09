@@ -11,6 +11,8 @@ namespace Dactyl::Model
     {
         _nodeID = nid;
         _coords = coords;
+        _dofs << 0, 0, 0,
+                 0, 0, 0;
     }
 
     int Node::GetNodeID()
@@ -31,6 +33,56 @@ namespace Dactyl::Model
     Eigen::Vector3d Node::GetCoords()
     {
         return _coords;
+    }
+
+    Eigen::Vector3d Node::GetForce()
+    {
+        return _nodeForce;
+    }
+
+    void Node::SetDisplacements(Eigen::Vector3d displacements)
+    {
+        _displacements = displacements;
+    }
+
+    Eigen::Vector3i Node::GetMovementDOFs()
+    {
+        return _dofs.row(0);
+    }
+
+    Eigen::Vector3i Node::GetRotationDOFs()
+    {
+        return _dofs.row(0);
+    }
+
+    void Node::AddNodeConstraint(ConstraintType type)
+    {
+        if(type == ConstraintType::Free)
+        {
+            _dofs << 0, 0, 0,
+                     0, 0, 0;
+        }
+
+        if(type == ConstraintType::FixUX)
+        {
+            _dofs(0, 0) = 1;
+        }
+
+        if(type == ConstraintType::FixUY)
+        {
+            _dofs(0, 1) = 1;
+        }
+
+        if(type == ConstraintType::FixUXY)
+        {
+            _dofs(0, 0) = 1;
+            _dofs(0, 1) = 1;
+        }
+    }
+
+    void Node::AddNodeForce(Eigen::Vector3d forceVector)
+    {
+        _nodeForce = forceVector;
     }
 
     NodeCreator::NodeCreator(const KNode &kNode) : INodeCreator(kNode)

@@ -2,6 +2,7 @@
 #ifndef _Dactyl_NullModel_h_
 #define _Dactyl_NullModel_h_
 
+#include "Nodes/Dactyl.INode.h"
 #include "Dactyl.IModel.h"
 #include "Dactyl.ModelAliases.h"
 
@@ -36,6 +37,16 @@ namespace Dactyl::Model
 
             virtual void Print() override
             {
+            };
+
+            virtual bool SetConstraintsByCoords(std::any xCoord, std::any yCoord, ConstraintType type, double tolerance) override
+            {
+                return false;
+            };
+
+            virtual bool SetDistributedForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) override
+            {
+                return false;
             };
 
             virtual int GetNodesCount() override

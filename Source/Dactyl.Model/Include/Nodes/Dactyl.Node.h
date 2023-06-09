@@ -7,7 +7,6 @@
 #include <vector>
 #include "Nodes/Dactyl.INode.h"
 #include "Nodes/Dactyl.INodeCreator.h"
-#include "Dofs/Dactyl.IDof.h"
 #include "Dactyl.IModel.h"
 
 namespace Dactyl::Model
@@ -20,6 +19,13 @@ namespace Dactyl::Model
             virtual int GetGlobalNodeID() override;
             virtual void SetGlobalNodeID(int id) override;
             virtual Eigen::Vector3d GetCoords() override;
+            virtual Eigen::Vector3d GetForce() override;
+            virtual Eigen::Vector3i GetMovementDOFs() override;
+            virtual Eigen::Vector3i GetRotationDOFs() override;
+            virtual void SetDisplacements(Eigen::Vector3d displacements) override;
+
+            virtual void AddNodeConstraint(ConstraintType type) override;
+            virtual void AddNodeForce(Eigen::Vector3d forceVector) override;
 
             Node(Node const&) = delete;
             void operator=(Node const&) = delete;
@@ -27,7 +33,10 @@ namespace Dactyl::Model
         private:
             int _globalNodeID = -1;
             int _nodeID = -1;
+            Eigen::Matrix<int, 2, 3> _dofs;
             Eigen::Vector3d _coords{0,0,0};
+            Eigen::Vector3d _nodeForce{0,0,0};
+            Eigen::Vector3d _displacements{0,0,0};
     };
 
     class NodeCreator : public INodeCreator

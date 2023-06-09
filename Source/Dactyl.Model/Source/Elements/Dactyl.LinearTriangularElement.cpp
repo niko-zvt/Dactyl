@@ -1,7 +1,6 @@
 #include "Dactyl.FEModel.h"
 #include "Nodes/Dactyl.INode.h"
 #include "Nodes/Dactyl.Node.h"
-#include "Dofs/Dactyl.IDof.h"
 #include "Dactyl.ModelLocator.h"
 #include "Elements/Dactyl.IElement.h"
 #include "Elements/Dactyl.IElementCreator.h"

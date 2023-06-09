@@ -6,7 +6,6 @@
 #include <Dense>
 #include <vector>
 #include "Nodes/Dactyl.INode.h"
-#include "Dofs/Dactyl.IDof.h"
 #include "Materials/Dactyl.IMaterial.h"
 #include "Materials/Dactyl.IMaterialCreator.h"
 #include "Dactyl.IModel.h"
