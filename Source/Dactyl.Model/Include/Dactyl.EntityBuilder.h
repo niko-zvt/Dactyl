@@ -21,7 +21,7 @@ namespace Dactyl::Model
             static MaterialSet buildMaterials(const std::vector<KMaterial>& kMaterials);
             static PropertySet buildProperties(const std::vector<KProperty>& kProperties, const std::vector<KSection>& kSections);
             static NodeSet buildNodes(const std::vector<KNode>& kNodes);
-            static std::vector<IElementPtr> buildElements(const std::vector<KElement>& kElements);
+            static ElementSet buildElements(const std::vector<KElement>& kElements);
     };
 }
 
