@@ -176,11 +176,11 @@ namespace Dactyl::Model
         int doubleNodesSize = 2 * GetNodesCount();
         auto globalStiffnessMatrix = std::make_unique<Eigen::SparseMatrix<double>>(doubleNodesSize, doubleNodesSize);
         globalStiffnessMatrix->setFromTriplets(localStiffnessMatrixes.begin(), localStiffnessMatrixes.end());
-        _globalStiffnessMatrix = std::move(globalStiffnessMatrix); // Move global stiffness matrix to model
+        _globalStiffnessMatrix = std::move(globalStiffnessMatrix); // Move (fast and hard) global stiffness matrix to model
 
         // 3. Build global force vector
         auto externalForcesVector = std::make_unique<Eigen::VectorXd>(BuildExternalForcesVector());
-        _externalForcesVector = std::move(externalForcesVector); 
+        _globalForceVector = std::move(externalForcesVector); // Move (fast and hard) global forces vector
 
         // 5. Build Constraints
         auto resultConstraints = ApplyConstraints();
@@ -246,11 +246,30 @@ namespace Dactyl::Model
     {
         auto result = false;
 
+        // 1. Build global ensemble {R} = [K]{u}
         result = BuildGlobalEnsemble();
         if(result == false)
-            return false;
+            return result;
 
+        // 2. Solve linear system {u} = [K']{R}
         result = SolveLinearSystem();
+        if(result == false)
+            return result;
+        
+        // 3. Calculate strains and stresses matrixes
+        result = BuildStrainsAndStressesForAllElements();
+        
+        return result;
+    }
+
+    bool FEModel::BuildStrainsAndStressesForAllElements()
+    {
+        auto result = false;
+
+        for(const auto& e : _elements)
+        {
+            e.second->CalculateLocalStrainAndStressMatrix();
+        }
 
         return result;
     }
@@ -260,13 +279,16 @@ namespace Dactyl::Model
         auto result = false;
 
         Eigen::SimplicialLDLT<Eigen::SparseMatrix<double>> solver(*_globalStiffnessMatrix);
-        Eigen::VectorXd displacements = solver.solve(*_externalForcesVector);
-        result = MoveDisplacementsToNodes(displacements);
+        auto displacements = solver.solve(*_globalForceVector);
+        _globalDisplacementVector = std::make_unique<Eigen::VectorXd>(displacements);;
+        result = true;
+        // TODO: How to properly store displacements data? It may be necessary to copy data to nodes.
+        // result = CopyDisplacementsToNodes(displacements);
         
         return result;
     }
 
-    bool FEModel::MoveDisplacementsToNodes(const Eigen::VectorXd& displacements)
+    bool FEModel::CopyDisplacementsToNodes(const Eigen::VectorXd& displacements)
     {
         auto result = false;
 
@@ -301,8 +323,20 @@ namespace Dactyl::Model
         return _materials.GetByID(id);
     }
 
+    Eigen::VectorXd FEModel::GetGlobalDisplacementVector()
+    {
+        return *_globalDisplacementVector;
+    }
+
     void FEModel::Print()
     {
-        // Do nothing.
+        std::cout << "GLOBAL STIFFNESS MATRIX" << std::endl;
+        std::cout << *_globalStiffnessMatrix << std::endl;
+
+        std::cout << "GLOBAL FORCE VECTOR\n" << std::endl;
+        std::cout << *_globalForceVector << std::endl << std::endl;
+
+        std::cout << "GLOBAL DISPLACEMENT VECTOR\n" << std::endl;
+        std::cout << *_globalDisplacementVector << std::endl << std::endl;
     }
 }

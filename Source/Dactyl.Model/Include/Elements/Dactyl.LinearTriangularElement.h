@@ -21,13 +21,18 @@ namespace Dactyl::Model
 
             virtual int GetElementID() override;
             virtual int GetPropertyID() override;
-            virtual void CalculateLocalStiffnessMatrix(std::vector<Eigen::Triplet<double>>& subEnsembles) override;
             virtual int GetNodesCount() override;
+            virtual void CalculateLocalStiffnessMatrix(std::vector<Eigen::Triplet<double>>& subEnsembles) override;
+            virtual void CalculateLocalStrainAndStressMatrix() override;
+            virtual Eigen::Matrix3d GetStrainMatrix() override;
+            virtual Eigen::Matrix3d GetStressMatrix() override;
 
             LinearTriangularElement(LinearTriangularElement const&) = delete;
             void operator=(LinearTriangularElement const&) = delete;
 
         private:
+            Eigen::Matrix3d BuildStrainMatrix();
+            Eigen::Matrix3d BuildStressMatrix();
             Eigen::Matrix3d BuildTwoAreaMatrix();
             Eigen::Matrix3d BuildElasticityMatrix();
             Eigen::Matrix<double, 3, 6> BuildGradientMatrix();
@@ -41,6 +46,8 @@ namespace Dactyl::Model
             Eigen::Matrix3d _A;             // Two Area Matrix
             Eigen::Matrix3d _D;             // Elasticity Matrix
             Eigen::Matrix<double, 3, 6> _B; // Gradient Matrix
+            Eigen::Matrix3d _strainMatrix;  // Strain matrix
+            Eigen::Matrix3d _stressMatrix;  // Stress matrix
     };
 
     class LinearTriangularCreator : public IElementCreator

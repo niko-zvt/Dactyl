@@ -29,6 +29,8 @@ namespace Dactyl::Model
             virtual std::shared_ptr<INode> GetNodeByID(int id) = 0;
             virtual std::shared_ptr<IProperty> GetPropertyByID(int id) = 0;
             virtual std::shared_ptr<IMaterial> GetMaterialByID(int id) = 0;
+            virtual Eigen::VectorXd GetGlobalDisplacementVector() = 0;
+            
     };
 }
 

@@ -23,7 +23,7 @@ namespace Dactyl::Model
             virtual Eigen::Vector3i GetMovementDOFs() override;
             virtual Eigen::Vector3i GetRotationDOFs() override;
             virtual void SetDisplacements(Eigen::Vector3d displacements) override;
-
+            virtual Eigen::Vector3d GetDisplacements() override;
             virtual void AddNodeConstraint(ConstraintType type) override;
             virtual void AddNodeForce(Eigen::Vector3d forceVector) override;
 
@@ -36,7 +36,7 @@ namespace Dactyl::Model
             Eigen::Matrix<int, 2, 3> _dofs;
             Eigen::Vector3d _coords{0,0,0};
             Eigen::Vector3d _nodeForce{0,0,0};
-            Eigen::Vector3d _displacements{0,0,0};
+            Eigen::Vector3d _nodeDisplacements{0,0,0};
     };
 
     class NodeCreator : public INodeCreator
