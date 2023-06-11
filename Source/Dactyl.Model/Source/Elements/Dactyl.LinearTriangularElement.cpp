@@ -9,6 +9,7 @@
 #include <Core>
 #include <Dense>
 #include <vector>
+#include <iostream>
 
 namespace Dactyl::Model
 {
@@ -29,6 +30,65 @@ namespace Dactyl::Model
     int LinearTriangularElement::GetPropertyID()
     {
         return _propertyID;
+    }
+
+    Eigen::Matrix3d LinearTriangularElement::GetStrainMatrix()
+    {
+        return _strainMatrix;
+    }
+
+    Eigen::Matrix3d LinearTriangularElement::GetStressMatrix()
+    {
+        return _stressMatrix;
+    }
+
+    void LinearTriangularElement::CalculateLocalStrainAndStressMatrix()
+    {
+        Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+        auto globalDisplacementVector = model.GetGlobalDisplacementVector();
+        Eigen::Matrix<double, 6, 1> delta;
+
+        int index = 0;
+        for(auto nodeID : _nodesIDs)
+        {
+            auto globalNodeID = model.GetNodeByID(nodeID)->GetGlobalNodeID();
+            auto u = globalDisplacementVector(2 * globalNodeID);
+            auto v = globalDisplacementVector(2 * globalNodeID + 1);
+            // auto w = 0.0;
+            delta(index, 0) = u;
+            delta(index + 1, 0) = v; 
+            // delta(index + 2, 0) = w;
+            index++;
+        }
+
+        auto strains = _B * delta;
+        auto stresses = _D * strains;
+
+        // Strain matrix
+        _strainMatrix(0, 0) = strains[0];
+        _strainMatrix(0, 1) = strains[2];
+        _strainMatrix(0, 2) = 0.0;
+
+        _strainMatrix(1, 0) = strains[2];
+        _strainMatrix(1, 1) = strains[1];
+        _strainMatrix(1, 2) = 0.0;
+        
+        _strainMatrix(2, 0) = 0.0;
+        _strainMatrix(2, 1) = 0.0;
+        _strainMatrix(2, 2) = 0.0;
+
+        // Stress matrix
+        _stressMatrix(0, 0) = stresses[0];
+        _stressMatrix(0, 1) = stresses[2];
+        _stressMatrix(0, 2) = 0.0;
+
+        _stressMatrix(1, 0) = stresses[2];
+        _stressMatrix(1, 1) = stresses[1];
+        _stressMatrix(1, 2) = 0.0;
+        
+        _stressMatrix(2, 0) = 0.0;
+        _stressMatrix(2, 1) = 0.0;
+        _stressMatrix(2, 2) = 0.0;
     }
 
     void LinearTriangularElement::CalculateLocalStiffnessMatrix(std::vector<Eigen::Triplet<double>>& subEnsembles)
@@ -80,15 +140,18 @@ namespace Dactyl::Model
     Eigen::Matrix<double, 3, 6> LinearTriangularElement::BuildGradientMatrix()
     {
         auto inverseA = _A.inverse();
-        Eigen::Matrix<double, 3, 6> gradMatrix;
+        Eigen::Matrix<double, 3, 6> gradMatrix; // <double, 3, 9>
         for (int i = 0; i < 3; i++)
         {
             gradMatrix(0, 2 * i + 0) = inverseA(1, i);
-        	gradMatrix(0, 2 * i + 1) = 0.0f;
-        	gradMatrix(1, 2 * i + 0) = 0.0f;
+        	gradMatrix(0, 2 * i + 1) = 0.0;
+            // gradMatrix(0, 2 * i + 2)
+        	gradMatrix(1, 2 * i + 0) = 0.0;
         	gradMatrix(1, 2 * i + 1) = inverseA(2, i);
+            // gradMatrix(1, 2 * i + 2)
         	gradMatrix(2, 2 * i + 0) = inverseA(2, i);
         	gradMatrix(2, 2 * i + 1) = inverseA(1, i);
+            // gradMatrix(2, 2 * i + 2)
         }
         return gradMatrix;
     }

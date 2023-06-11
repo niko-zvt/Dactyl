@@ -42,7 +42,12 @@ namespace Dactyl::Model
 
     void Node::SetDisplacements(Eigen::Vector3d displacements)
     {
-        _displacements = displacements;
+        _nodeDisplacements = displacements;
+    }
+
+    Eigen::Vector3d Node::GetDisplacements()
+    {
+        return _nodeDisplacements;
     }
 
     Eigen::Vector3i Node::GetMovementDOFs()

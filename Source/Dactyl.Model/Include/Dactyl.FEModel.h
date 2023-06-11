@@ -39,14 +39,15 @@ namespace Dactyl::Model
             virtual std::shared_ptr<INode> GetNodeByID(int id) override;
             virtual std::shared_ptr<IProperty> GetPropertyByID(int id) override;
             virtual std::shared_ptr<IMaterial> GetMaterialByID(int id) override;
-       
+            virtual Eigen::VectorXd GetGlobalDisplacementVector() override;
         private:
             bool BuildGlobalEnsemble();
             bool ApplyConstraints();
             bool SolveLinearSystem();
             Eigen::VectorXd BuildExternalForcesVector();
             void SetConstraintsToGlobalStiffnessMatrix(Eigen::SparseMatrix<double>::InnerIterator& it, int globalID);
-            bool MoveDisplacementsToNodes(const Eigen::VectorXd& displacements);
+            bool CopyDisplacementsToNodes(const Eigen::VectorXd& displacements);
+            bool BuildStrainsAndStressesForAllElements();
 
         public:
             FEModel(FEModel const&) = delete;
@@ -59,8 +60,8 @@ namespace Dactyl::Model
             ElementSet _elements;
 
             std::unique_ptr<Eigen::SparseMatrix<double>> _globalStiffnessMatrix;
-            std::unique_ptr<Eigen::VectorXd> _externalForcesVector;
-            std::unique_ptr<Eigen::VectorXd> _displacements;
+            std::unique_ptr<Eigen::VectorXd> _globalForceVector;
+            std::unique_ptr<Eigen::VectorXd> _globalDisplacementVector;
             NodeSet _nodesWithConstraints;
     };
 }
