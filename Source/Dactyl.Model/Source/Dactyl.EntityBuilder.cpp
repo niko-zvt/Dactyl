@@ -62,15 +62,15 @@ namespace Dactyl::Model
         return nodes;
     }
     
-    std::vector<IElementPtr> EntityBuilder::buildElements(const std::vector<KElement>& kElements)
+    ElementSet EntityBuilder::buildElements(const std::vector<KElement>& kElements)
     {
-        std::vector<IElementPtr> elements;
+        ElementSet elements;
 
         for (const auto& kElement : kElements)
         {
             auto creator = IElementCreator::getElementCreator(kElement);
             auto element = creator->buildElement();
-            elements.push_back(element);
+            elements.Add(element);
         }
 
         return elements;

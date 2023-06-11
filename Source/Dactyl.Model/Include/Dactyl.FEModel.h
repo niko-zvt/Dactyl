@@ -15,7 +15,7 @@
 #include "Sets/Dactyl.NodeSet.h"
 #include "Sets/Dactyl.MaterialSet.h"
 #include "Sets/Dactyl.PropertySet.h"
-
+#include "Sets/Dactyl.ElementSet.h"
 
 namespace Dactyl::Model
 {
@@ -47,9 +47,6 @@ namespace Dactyl::Model
             Eigen::VectorXd BuildExternalForcesVector();
             void SetConstraintsToGlobalStiffnessMatrix(Eigen::SparseMatrix<double>::InnerIterator& it, int globalID);
             bool MoveDisplacementsToNodes(const Eigen::VectorXd& displacements);
-            // TODO: Delete
-            void print_matrix(Eigen::MatrixX3d m);
-            void hello_model();
 
         public:
             FEModel(FEModel const&) = delete;
@@ -59,7 +56,7 @@ namespace Dactyl::Model
             NodeSet _nodes;
             MaterialSet _materials;
             PropertySet _properties;
-            std::vector<std::shared_ptr<IElement>> _elements;
+            ElementSet _elements;
 
             std::unique_ptr<Eigen::SparseMatrix<double>> _globalStiffnessMatrix;
             std::unique_ptr<Eigen::VectorXd> _externalForcesVector;

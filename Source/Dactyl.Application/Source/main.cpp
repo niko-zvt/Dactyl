@@ -52,23 +52,20 @@ int main(int argc, char *argv[])
     auto openResult = feModel->LoadMesh(*kData);
     kData->~KData();
     
-    // 6 Set constraints
+    // 6. Set constraints
     std::any any;
     auto tolerance = 0.001;
     auto yConstraintResult = feModel->SetConstraintsByCoords(any, 0.0, Dactyl::Model::ConstraintType::FixUY, tolerance);
     auto xConstraintResult = feModel->SetConstraintsByCoords(0.0, any, Dactyl::Model::ConstraintType::FixUX, tolerance);
     
-    // 7 Set loads
+    // 7. Set loads
     auto forceResult = feModel->SetDistributedForceByCoords(0.15, any, 1600.0, 0.0, tolerance);
     
-    // 8 Calculate
+    // 8. Calculate and postprocessing
     auto calcResult = feModel->Calculate();
-
-    auto n = feModel->GetNodesCount();
-    Utils::print_string(Utils::to_string(calcResult));
-    feModel->Print();
-
+    
     // 6. Get results
+    feModel->Print();
 
     // 7. End
     return 0;
