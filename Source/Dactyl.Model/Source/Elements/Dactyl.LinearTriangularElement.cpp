@@ -42,6 +42,21 @@ namespace Dactyl::Model
         return _stressMatrix;
     }
 
+    Eigen::Vector3d LinearTriangularElement::GetCoordCenter()
+    {
+        Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+        auto coords_1 = model.GetNodeByID(_nodesIDs[0])->GetCoords();
+        auto coords_2 = model.GetNodeByID(_nodesIDs[1])->GetCoords();
+        auto coords_3 = model.GetNodeByID(_nodesIDs[2])->GetCoords();
+
+        auto x = (coords_1[0] + coords_2[0] + coords_3[0]) / 3;
+        auto y = (coords_1[1] + coords_2[1] + coords_3[1]) / 3;
+        auto z = (coords_1[2] + coords_2[2] + coords_3[2]) / 3;
+        Eigen::Vector3d center;
+        center << x, y, z;
+        return center;
+    }
+
     void LinearTriangularElement::CalculateLocalStrainAndStressMatrix()
     {
         Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();

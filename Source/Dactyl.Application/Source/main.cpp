@@ -55,11 +55,12 @@ int main(int argc, char *argv[])
     // 6. Set constraints
     std::any any;
     auto tolerance = 0.001;
-    auto yConstraintResult = feModel->SetConstraintsByCoords(0.0, 0.0, Dactyl::Model::ConstraintType::FixUXY, tolerance);
-    auto xConstraintResult = feModel->SetConstraintsByCoords(1.0, 0.0, Dactyl::Model::ConstraintType::FixUY, tolerance);
+    auto constraint_UY_Result = feModel->SetConstraintsByCoords(any, 0.0, Dactyl::Model::ConstraintType::FixUY, tolerance);
+    auto constraint_UX_Result = feModel->SetConstraintsByCoords(0.0, any, Dactyl::Model::ConstraintType::FixUX, tolerance);
+    // Fix UY in UX
     
     // 7. Set loads
-    auto forceResult = feModel->SetDistributedForceByCoords(any, 1.0, 0.0, 2.0, tolerance);
+    auto forceResult = feModel->SetDistributedForceByCoords(0.15, any, 1000, 0.0, tolerance);
     
     // 8. Calculate and postprocessing
     auto calcResult = feModel->Calculate();
