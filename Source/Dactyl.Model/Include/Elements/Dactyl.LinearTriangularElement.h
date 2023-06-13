@@ -26,6 +26,7 @@ namespace Dactyl::Model
             virtual void CalculateLocalStrainAndStressMatrix() override;
             virtual Eigen::Matrix3d GetStrainMatrix() override;
             virtual Eigen::Matrix3d GetStressMatrix() override;
+            virtual Eigen::Vector3d GetCoordCenter() override;
 
             LinearTriangularElement(LinearTriangularElement const&) = delete;
             void operator=(LinearTriangularElement const&) = delete;

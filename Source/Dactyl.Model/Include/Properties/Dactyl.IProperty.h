@@ -3,6 +3,7 @@
 #define _Dactyl_IProperty_h_
 
 #include <string>
+#include <vector>
 
 namespace Dactyl::Model
 {

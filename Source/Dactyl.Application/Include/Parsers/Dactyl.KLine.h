@@ -14,8 +14,8 @@ namespace Dactyl::Application
     class KLine
     {
         public:
-            const int getLevel()    { return Level; };
-            const int getID()       { return Id; };
+            int getLevel()          { return Level; };
+            int getID()             { return Id; };
             std::string getType()   { return Type; };
             std::string getData()   { return Data; };
             std::string getRef()    { return Ref; };

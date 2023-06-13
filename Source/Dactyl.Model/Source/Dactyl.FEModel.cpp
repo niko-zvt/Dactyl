@@ -330,13 +330,30 @@ namespace Dactyl::Model
 
     void FEModel::Print()
     {
-        std::cout << "GLOBAL STIFFNESS MATRIX" << std::endl;
-        std::cout << *_globalStiffnessMatrix << std::endl;
+        //std::cout << "GLOBAL STIFFNESS MATRIX" << std::endl;
+        //std::cout << *_globalStiffnessMatrix << std::endl;
 
-        std::cout << "GLOBAL FORCE VECTOR\n" << std::endl;
-        std::cout << *_globalForceVector << std::endl << std::endl;
+        //std::cout << "GLOBAL FORCE VECTOR\n" << std::endl;
+        //std::cout << *_globalForceVector << std::endl << std::endl;
 
-        std::cout << "GLOBAL DISPLACEMENT VECTOR\n" << std::endl;
-        std::cout << *_globalDisplacementVector << std::endl << std::endl;
+        //std::cout << "GLOBAL DISPLACEMENT VECTOR\n" << std::endl;
+        //std::cout << *_globalDisplacementVector << std::endl << std::endl;
+
+        std::cout << "NORMAL STRESS XX ALONG Y-AXIS" << std::endl;
+        std::cout << "\tEID\tX\tY\tSXX" << std::endl;
+        int eid = 0;
+        Eigen::Vector3d coords{0, 0, 0};
+        double stressXX = 0.0;
+        for(auto& e : _elements)
+        {
+            eid = e.second->GetElementID();
+            coords = e.second->GetCoordCenter();
+            auto stresses = e.second->GetStressMatrix();
+            stressXX = stresses(0, 0);
+            double x = coords[0];
+            double y = coords[1];
+            std::cout << "\t" << eid << "\t" << x << "\t" << y << "\t" << stressXX << std::endl;
+        }
+        
     }
 }
