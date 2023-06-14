@@ -40,7 +40,9 @@ namespace Dactyl::Model
             virtual std::shared_ptr<IProperty> GetPropertyByID(int id) override;
             virtual std::shared_ptr<IMaterial> GetMaterialByID(int id) override;
             virtual Eigen::VectorXd GetGlobalDisplacementVector() override;
+        
         private:
+            bool LinkParents();
             bool BuildGlobalEnsemble();
             bool ApplyConstraints();
             bool SolveLinearSystem();

@@ -85,9 +85,19 @@ namespace Dactyl::Model
         }
     }
 
-    void Node::AddNodeForce(Eigen::Vector3d forceVector)
+    void Node::SetNodeForce(Eigen::Vector3d forceVector)
     {
         _nodeForce = forceVector;
+    }
+
+    void Node::AddParentElementID(int parentID)
+    {
+        _parentElementIDs.push_back(parentID);
+    }
+
+    std::vector<int> Node::GetParentElementIDs()
+    {
+        return _parentElementIDs;
     }
 
     NodeCreator::NodeCreator(const KNode &kNode) : INodeCreator(kNode)
