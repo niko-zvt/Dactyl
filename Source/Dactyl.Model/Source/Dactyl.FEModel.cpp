@@ -122,7 +122,7 @@ namespace Dactyl::Model
         auto xCoordAsConst = isXAny == false ? std::any_cast<double>(xCoord) : 0.0 ;
         auto yCoordAsConst = isYAny == false ? std::any_cast<double>(yCoord) : 0.0 ;
 
-        // Create constraints
+        // Create forces
         std::vector<int> nodesIDs;
         for (const auto& n : _nodes)
         {
@@ -231,13 +231,15 @@ namespace Dactyl::Model
 
     Eigen::VectorXd FEModel::BuildExternalForcesVector()
     {
-        Eigen::VectorXd R(2*_nodes.size());
+        auto doubleNodesSize = 2 * _nodes.size();
+        Eigen::VectorXd R(doubleNodesSize);
         for (const auto& n : _nodes)
         {
             auto globalNodeID = n.second->GetGlobalNodeID();
             auto nodalForce = n.second->GetForce();
-            R.row(2*globalNodeID) << nodalForce(0);
-            R.row(2*globalNodeID + 1) << nodalForce(1);
+            R.row(2 * globalNodeID) << nodalForce(0);       // Fx
+            R.row(2 * globalNodeID + 1) << nodalForce(1);   // Fy
+            //R.row(2 * globalNodeID + 2) << nodalForce(2); // Fz
         }
         return R;
     }
