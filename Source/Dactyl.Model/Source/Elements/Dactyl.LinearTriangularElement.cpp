@@ -42,6 +42,11 @@ namespace Dactyl::Model
         return _stressMatrix;
     }
 
+    std::vector<int> LinearTriangularElement::GetNodeIDs()
+    {
+        return _nodesIDs;
+    }
+
     Eigen::Vector3d LinearTriangularElement::GetCoordCenter()
     {
         Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
