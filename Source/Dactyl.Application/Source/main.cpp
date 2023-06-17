@@ -63,9 +63,7 @@ int main(int argc, char *argv[])
     auto h = 0.5;   // m
     auto w = 0.3;   // m
 
-    auto forceResult1 = feModel->SetNodalForceByCoords(w/2, any, q, 0, tolerance);
-    auto forceResult2 = feModel->SetNodalForceByCoords(w/2, 0.0, q/2, 0, tolerance);
-    auto forceResult3 = feModel->SetNodalForceByCoords(w/2, h, q/2, 0, tolerance);
+    auto forceResult1 = feModel->SetDistributedForceByCoords(w/2, any, q, 0, tolerance);
 
     // 8. Calculate and postprocessing
     auto calcResult = feModel->Calculate();

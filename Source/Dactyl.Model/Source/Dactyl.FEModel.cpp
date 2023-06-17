@@ -196,7 +196,6 @@ namespace Dactyl::Model
     bool FEModel::SetDistributedForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance)
     {
         auto result = false;
-        auto q = std::sqrt(Fx * Fx + Fy * Fy);
 
         bool isXAny = !xCoord.has_value();
         bool isYAny = !yCoord.has_value();
@@ -282,8 +281,8 @@ namespace Dactyl::Model
             auto h = 1.0;
             auto l = std::sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
 
-            auto nodalFx = h * q * l / 2;
-            auto nodalFy = h * q * l / 2;
+            auto nodalFx = h * Fx * l / 2;
+            auto nodalFy = h * Fy * l / 2;
             auto nodalFz = 0.0;
             Eigen::Vector3d nodalForce {nodalFx, nodalFy, nodalFz};
             n1->AddNodeForce(nodalForce);
@@ -481,12 +480,10 @@ namespace Dactyl::Model
 
         std::cout << "NORMAL STRESSES" << std::endl;
         std::cout << "\tEID\tX\tY\tSXX\tSYY\tSXY" << std::endl;
-        int eid = 0;
-        Eigen::Vector3d coords{0, 0, 0};
         for(auto& e : _elements)
         {
-            eid = e.second->GetElementID();
-            coords = e.second->GetCoordCenter();
+            auto eid = e.second->GetElementID();
+            auto coords = e.second->GetCoordCenter();
             auto stresses = e.second->GetStressMatrix();
             auto stressXX = stresses(0, 0);
             auto stressYY = stresses(1, 1);
@@ -509,19 +506,16 @@ namespace Dactyl::Model
         //    std::cout << "\t" << nid << "\t" << coords[0] << "\t" << coords[1] << "\t" << uvw[0] << "\t" << uvw[1] << std::endl;
         //}
 
-        //std::cout << "VON MISES STRESS" << std::endl;
-        //std::cout << "\tEID\tX\tY\tSv" << std::endl;
-        //int eid = 0;
-        //Eigen::Vector3d coords{0, 0, 0};
-        //double stressXX = 0.0;
-        //for(auto& e : _elements)
-        //{
-        //    eid = e.second->GetElementID();
-        //    coords = e.second->GetCoordCenter();
-        //    auto sv = e.second->GetVonMisesStress();
-        //    double x = coords[0];
-        //    double y = coords[1];
-        //    std::cout << "\t" << eid << "\t" << x << "\t" << y << "\t" << sv << std::endl;
-        //}
+        std::cout << "VON MISES STRESS" << std::endl;
+        std::cout << "\tEID\tX\tY\tSv" << std::endl;       
+        for(auto& e : _elements)
+        {
+            auto eid = e.second->GetElementID();
+            auto coords = e.second->GetCoordCenter();
+            auto sv = e.second->GetVonMisesStress();
+            double x = coords[0];
+            double y = coords[1];
+            std::cout << "\t" << eid << "\t" << x << "\t" << y << "\t" << sv << std::endl;
+        }
     }
 }

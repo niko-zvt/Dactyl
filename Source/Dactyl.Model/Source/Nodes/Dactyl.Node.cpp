@@ -13,6 +13,8 @@ namespace Dactyl::Model
         _coords = coords;
         _dofs << 0, 0, 0,
                  0, 0, 0;
+        _nodeForce << 0, 0, 0;
+        _nodeDisplacements << 0, 0, 0;
     }
 
     int Node::GetNodeID()
