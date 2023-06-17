@@ -26,6 +26,7 @@ namespace Dactyl::Model
             virtual Eigen::Vector3d GetDisplacements() override;
             virtual void AddNodeConstraint(ConstraintType type) override;
             virtual void SetNodeForce(Eigen::Vector3d forceVector) override;
+            virtual void AddNodeForce(Eigen::Vector3d forceVector) override;
             virtual void AddParentElementID(int parentID) override;
             virtual std::vector<int> GetParentElementIDs() override;
 

@@ -55,19 +55,67 @@ int main(int argc, char *argv[])
     // 6. Set constraints
     std::any any;
     auto tolerance = 0.001;
-    auto constraint_UY_Result = feModel->SetConstraintsByCoords(any, 0.0, Dactyl::Model::ConstraintType::FixUY, tolerance);
-    auto constraint_UX_Result = feModel->SetConstraintsByCoords(0.0, any, Dactyl::Model::ConstraintType::FixUX, tolerance);
-    // Fix UY in UX
-    
+    auto UX = feModel->SetConstraintsByCoords(0.0, any, Dactyl::Model::ConstraintType::FixUX, tolerance);
+    auto UY = feModel->SetConstraintsByCoords(any, 0.0, Dactyl::Model::ConstraintType::FixUY, tolerance);
+
     // 7. Set loads
-    auto forceResult = feModel->SetDistributedForceByCoords(0.15, any, 1000, 0.0, tolerance);
-    
+    auto q = 1000;  // kN/m
+    auto h = 0.5;   // m
+    auto w = 0.3;   // m
+
+    auto forceResult1 = feModel->SetNodalForceByCoords(w/2, any, q, 0, tolerance);
+    auto forceResult2 = feModel->SetNodalForceByCoords(w/2, 0.0, q/2, 0, tolerance);
+    auto forceResult3 = feModel->SetNodalForceByCoords(w/2, h, q/2, 0, tolerance);
+
     // 8. Calculate and postprocessing
     auto calcResult = feModel->Calculate();
-    
-    // 6. Get results
+
+    // 9. Get results
     feModel->Print();
 
-    // 7. End
+    // 10. End
     return 0;
+}
+
+void Utils::ConfigurateTest1()
+{
+    Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+    
+    // 1. Set constraints
+    std::any any;
+    auto tolerance = 0.001;
+    auto UXY_0 = model.SetConstraintsByCoords(any, 0.0, Dactyl::Model::ConstraintType::FixUXY, tolerance);
+
+    // 2. Set loads
+    auto forceResult = model.SetNodalForceByCoords(any, 3.0, 0.0, 5.0, tolerance);
+}
+
+void Utils::ConfigurateTest2()
+{
+    Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+
+    // 1. Set constraints
+    std::any any;
+    auto tolerance = 0.001;
+    auto UX = model.SetConstraintsByCoords(-1.2, any, Dactyl::Model::ConstraintType::FixUX, tolerance);
+    auto UY = model.SetConstraintsByCoords(any, 0.0, Dactyl::Model::ConstraintType::FixUY, tolerance);
+
+    // 2. Set loads
+    auto forceResult = model.SetNodalForceByCoords(1.5, 4.0, 1.0, -3.0, tolerance);
+}
+
+void Utils::ConfigurateTest3()
+{
+    Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+
+    // 1. Set constraints
+    std::any any;
+    auto tolerance = 0.001;
+    auto UX = model.SetConstraintsByCoords(-1.2, any, Dactyl::Model::ConstraintType::FixUX, tolerance);
+    auto UY = model.SetConstraintsByCoords(any, 0.0, Dactyl::Model::ConstraintType::FixUY, tolerance);
+
+    // 2. Set loads
+    auto forceResult1 = model.SetNodalForceByCoords(1.5, 4.0, 0.5, 0, tolerance);
+    auto forceResult2 = model.SetNodalForceByCoords(1.5, 1.5, 1.0, 0, tolerance);
+    auto forceResult3 = model.SetNodalForceByCoords(1.5, 0.0, 0.5, 0, tolerance);
 }

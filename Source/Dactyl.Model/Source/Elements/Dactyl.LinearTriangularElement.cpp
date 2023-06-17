@@ -42,6 +42,11 @@ namespace Dactyl::Model
         return _stressMatrix;
     }
 
+    double LinearTriangularElement::GetVonMisesStress()
+    {
+        return _vonMisesStress;
+    }
+
     std::vector<int> LinearTriangularElement::GetNodeIDs()
     {
         return _nodesIDs;
@@ -75,8 +80,8 @@ namespace Dactyl::Model
             auto u = globalDisplacementVector(2 * globalNodeID);
             auto v = globalDisplacementVector(2 * globalNodeID + 1);
             // auto w = 0.0;
-            delta(index, 0) = u;
-            delta(index + 1, 0) = v; 
+            delta(2 * index, 0) = u;
+            delta(2 * index + 1, 0) = v;
             // delta(index + 2, 0) = w;
             index++;
         }
@@ -84,13 +89,21 @@ namespace Dactyl::Model
         auto strains = _B * delta;
         auto stresses = _D * strains;
 
+        auto exx = strains[0];
+        auto exy = strains[2];
+        auto eyy = strains[1];
+
+        auto sxx = stresses[0];
+        auto sxy = stresses[2];
+        auto syy = stresses[1];
+
         // Strain matrix
-        _strainMatrix(0, 0) = strains[0];
-        _strainMatrix(0, 1) = strains[2];
+        _strainMatrix(0, 0) = exx;
+        _strainMatrix(0, 1) = exy;
         _strainMatrix(0, 2) = 0.0;
 
-        _strainMatrix(1, 0) = strains[2];
-        _strainMatrix(1, 1) = strains[1];
+        _strainMatrix(1, 0) = exy;
+        _strainMatrix(1, 1) = eyy;
         _strainMatrix(1, 2) = 0.0;
         
         _strainMatrix(2, 0) = 0.0;
@@ -98,17 +111,19 @@ namespace Dactyl::Model
         _strainMatrix(2, 2) = 0.0;
 
         // Stress matrix
-        _stressMatrix(0, 0) = stresses[0];
-        _stressMatrix(0, 1) = stresses[2];
+        _stressMatrix(0, 0) = sxx;
+        _stressMatrix(0, 1) = sxy;
         _stressMatrix(0, 2) = 0.0;
 
-        _stressMatrix(1, 0) = stresses[2];
-        _stressMatrix(1, 1) = stresses[1];
+        _stressMatrix(1, 0) = sxy;
+        _stressMatrix(1, 1) = syy;
         _stressMatrix(1, 2) = 0.0;
         
         _stressMatrix(2, 0) = 0.0;
         _stressMatrix(2, 1) = 0.0;
         _stressMatrix(2, 2) = 0.0;
+
+        _vonMisesStress = std::sqrt((sxx*sxx) - (sxx*syy) + (syy*syy) + (3.0*sxy*sxy));
     }
 
     void LinearTriangularElement::CalculateLocalStiffnessMatrix(std::vector<Eigen::Triplet<double>>& subEnsembles)

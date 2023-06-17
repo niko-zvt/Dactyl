@@ -33,6 +33,7 @@ namespace Dactyl::Model
             virtual void Print() override;
 
             virtual bool SetConstraintsByCoords(std::any xCoord, std::any yCoord, ConstraintType type, double tolerance) override;
+            virtual bool SetNodalForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) override;
             virtual bool SetDistributedForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) override;
 
             virtual int GetNodesCount() override;
@@ -42,6 +43,7 @@ namespace Dactyl::Model
             virtual Eigen::VectorXd GetGlobalDisplacementVector() override;
         
         private:
+            bool SetDistributedForceByCoordsTest(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance);
             bool LinkParents();
             bool BuildGlobalEnsemble();
             bool ApplyConstraints();

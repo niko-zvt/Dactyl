@@ -90,6 +90,11 @@ namespace Dactyl::Model
         _nodeForce = forceVector;
     }
 
+    void Node::AddNodeForce(Eigen::Vector3d forceVector)
+    {
+        _nodeForce = _nodeForce + forceVector;
+    }
+
     void Node::AddParentElementID(int parentID)
     {
         _parentElementIDs.push_back(parentID);

@@ -22,6 +22,7 @@ namespace Dactyl::Model
             virtual Eigen::Matrix3d GetStrainMatrix() = 0;
             virtual Eigen::Matrix3d GetStressMatrix() = 0;
             virtual Eigen::Vector3d GetCoordCenter() = 0;
+            virtual double GetVonMisesStress() = 0;
     };
 }
 
