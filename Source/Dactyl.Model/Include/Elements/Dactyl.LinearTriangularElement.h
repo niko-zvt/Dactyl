@@ -26,6 +26,7 @@ namespace Dactyl::Model
             virtual void CalculateLocalStrainAndStressMatrix() override;
             virtual Eigen::Matrix3d GetStrainMatrix() override;
             virtual Eigen::Matrix3d GetStressMatrix() override;
+            virtual double GetVonMisesStress() override;
             virtual Eigen::Vector3d GetCoordCenter() override;
             virtual std::vector<int> GetNodeIDs() override;
             LinearTriangularElement(LinearTriangularElement const&) = delete;
@@ -49,6 +50,7 @@ namespace Dactyl::Model
             Eigen::Matrix<double, 3, 6> _B; // Gradient Matrix
             Eigen::Matrix3d _strainMatrix;  // Strain matrix
             Eigen::Matrix3d _stressMatrix;  // Stress matrix
+            double _vonMisesStress = 0.0;
     };
 
     class LinearTriangularCreator : public IElementCreator

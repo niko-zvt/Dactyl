@@ -44,6 +44,11 @@ namespace Dactyl::Model
                 return false;
             };
 
+            virtual bool SetNodalForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) override
+            {
+                return false;
+            };
+
             virtual bool SetDistributedForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) override
             {
                 return false;

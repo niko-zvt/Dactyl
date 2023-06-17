@@ -30,6 +30,7 @@ namespace Dactyl::Model
             virtual Eigen::Vector3d GetDisplacements() = 0;
             virtual void AddNodeConstraint(ConstraintType type) = 0;
             virtual void SetNodeForce(Eigen::Vector3d forceVector) = 0;
+            virtual void AddNodeForce(Eigen::Vector3d forceVector) = 0;
             virtual void AddParentElementID(int parentID) = 0;
             virtual std::vector<int> GetParentElementIDs() = 0;
     };
