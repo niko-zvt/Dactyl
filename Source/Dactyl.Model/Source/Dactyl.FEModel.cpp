@@ -517,5 +517,44 @@ namespace Dactyl::Model
             double y = coords[1];
             std::cout << "\t" << eid << "\t" << x << "\t" << y << "\t" << sv << std::endl;
         }
+
+        PrintYAxis();
+    }
+
+    void FEModel::PrintYAxis()
+    {
+        std::cout << "SXX ALONG Y-AXIS" << std::endl;
+        std::cout << "\tNID\tX\tY\tSXX" << std::endl;
+
+        // Create a list of nodes and a set of non-repeating elements
+        // associated with a Y-axis
+        double tolerance = 0.001;
+        std::vector<int> nodesIDs;
+        std::set<int> elementIDs;
+        for (const auto& n : _nodes)
+        {
+            // For each node - check coords
+            auto nodeID = n.second->GetNodeID();
+            auto parentIDs = n.second->GetParentElementIDs();
+            auto nodeCoords = n.second->GetCoords();
+            auto xCoord = 0.0;
+
+            if (std::abs(xCoord - nodeCoords[0]) > tolerance)
+            {
+                continue;
+            }
+
+            auto stress = 0.0;
+
+            // Add parents
+            for (auto parentID : parentIDs)
+            {
+                stress = stress + _elements.GetByID(parentID)->GetStressMatrix()(0,0);
+            }
+
+            stress = stress / parentIDs.size();
+            
+            std::cout << "\t" << nodeID << "\t" << nodeCoords[0] << "\t" << nodeCoords[1] << "\t" << stress << std::endl;
+        }
     }
 }

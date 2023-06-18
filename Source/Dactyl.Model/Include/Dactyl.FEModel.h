@@ -52,6 +52,7 @@ namespace Dactyl::Model
             void SetConstraintsToGlobalStiffnessMatrix(Eigen::SparseMatrix<double>::InnerIterator& it, int globalID);
             bool CopyDisplacementsToNodes(const Eigen::VectorXd& displacements);
             bool BuildStrainsAndStressesForAllElements();
+            void PrintYAxis();
 
         public:
             FEModel(FEModel const&) = delete;
