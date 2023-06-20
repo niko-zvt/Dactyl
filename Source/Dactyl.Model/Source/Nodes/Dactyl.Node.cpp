@@ -13,6 +13,8 @@ namespace Dactyl::Model
         _coords = coords;
         _dofs << 0, 0, 0,
                  0, 0, 0;
+        _nodeForce << 0, 0, 0;
+        _nodeDisplacements << 0, 0, 0;
     }
 
     int Node::GetNodeID()
@@ -42,7 +44,12 @@ namespace Dactyl::Model
 
     void Node::SetDisplacements(Eigen::Vector3d displacements)
     {
-        _displacements = displacements;
+        _nodeDisplacements = displacements;
+    }
+
+    Eigen::Vector3d Node::GetDisplacements()
+    {
+        return _nodeDisplacements;
     }
 
     Eigen::Vector3i Node::GetMovementDOFs()
@@ -80,9 +87,24 @@ namespace Dactyl::Model
         }
     }
 
-    void Node::AddNodeForce(Eigen::Vector3d forceVector)
+    void Node::SetNodeForce(Eigen::Vector3d forceVector)
     {
         _nodeForce = forceVector;
+    }
+
+    void Node::AddNodeForce(Eigen::Vector3d forceVector)
+    {
+        _nodeForce = _nodeForce + forceVector;
+    }
+
+    void Node::AddParentElementID(int parentID)
+    {
+        _parentElementIDs.push_back(parentID);
+    }
+
+    std::vector<int> Node::GetParentElementIDs()
+    {
+        return _parentElementIDs;
     }
 
     NodeCreator::NodeCreator(const KNode &kNode) : INodeCreator(kNode)

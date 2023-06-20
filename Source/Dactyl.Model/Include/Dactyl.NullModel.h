@@ -44,6 +44,11 @@ namespace Dactyl::Model
                 return false;
             };
 
+            virtual bool SetNodalForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) override
+            {
+                return false;
+            };
+
             virtual bool SetDistributedForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) override
             {
                 return false;
@@ -53,7 +58,13 @@ namespace Dactyl::Model
             {
                 return -1;
             };
-       
+
+            virtual Eigen::VectorXd GetGlobalDisplacementVector() override
+            {
+                Eigen::VectorXd null;
+                return null;
+            }
+
             virtual std::shared_ptr<INode> GetNodeByID(int id) override
             {
                 return nullptr;

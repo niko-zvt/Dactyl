@@ -33,20 +33,26 @@ namespace Dactyl::Model
             virtual void Print() override;
 
             virtual bool SetConstraintsByCoords(std::any xCoord, std::any yCoord, ConstraintType type, double tolerance) override;
+            virtual bool SetNodalForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) override;
             virtual bool SetDistributedForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) override;
 
             virtual int GetNodesCount() override;
             virtual std::shared_ptr<INode> GetNodeByID(int id) override;
             virtual std::shared_ptr<IProperty> GetPropertyByID(int id) override;
             virtual std::shared_ptr<IMaterial> GetMaterialByID(int id) override;
-       
+            virtual Eigen::VectorXd GetGlobalDisplacementVector() override;
+        
         private:
+            bool SetDistributedForceByCoordsTest(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance);
+            bool LinkParents();
             bool BuildGlobalEnsemble();
             bool ApplyConstraints();
             bool SolveLinearSystem();
             Eigen::VectorXd BuildExternalForcesVector();
             void SetConstraintsToGlobalStiffnessMatrix(Eigen::SparseMatrix<double>::InnerIterator& it, int globalID);
-            bool MoveDisplacementsToNodes(const Eigen::VectorXd& displacements);
+            bool CopyDisplacementsToNodes(const Eigen::VectorXd& displacements);
+            bool BuildStrainsAndStressesForAllElements();
+            void PrintYAxis();
 
         public:
             FEModel(FEModel const&) = delete;
@@ -59,8 +65,8 @@ namespace Dactyl::Model
             ElementSet _elements;
 
             std::unique_ptr<Eigen::SparseMatrix<double>> _globalStiffnessMatrix;
-            std::unique_ptr<Eigen::VectorXd> _externalForcesVector;
-            std::unique_ptr<Eigen::VectorXd> _displacements;
+            std::unique_ptr<Eigen::VectorXd> _globalForceVector;
+            std::unique_ptr<Eigen::VectorXd> _globalDisplacementVector;
             NodeSet _nodesWithConstraints;
     };
 }

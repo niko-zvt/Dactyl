@@ -9,6 +9,7 @@
 #include <Core>
 #include <Dense>
 #include <vector>
+#include <iostream>
 
 namespace Dactyl::Model
 {
@@ -29,6 +30,100 @@ namespace Dactyl::Model
     int LinearTriangularElement::GetPropertyID()
     {
         return _propertyID;
+    }
+
+    Eigen::Matrix3d LinearTriangularElement::GetStrainMatrix()
+    {
+        return _strainMatrix;
+    }
+
+    Eigen::Matrix3d LinearTriangularElement::GetStressMatrix()
+    {
+        return _stressMatrix;
+    }
+
+    double LinearTriangularElement::GetVonMisesStress()
+    {
+        return _vonMisesStress;
+    }
+
+    std::vector<int> LinearTriangularElement::GetNodeIDs()
+    {
+        return _nodesIDs;
+    }
+
+    Eigen::Vector3d LinearTriangularElement::GetCoordCenter()
+    {
+        Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+        auto coords_1 = model.GetNodeByID(_nodesIDs[0])->GetCoords();
+        auto coords_2 = model.GetNodeByID(_nodesIDs[1])->GetCoords();
+        auto coords_3 = model.GetNodeByID(_nodesIDs[2])->GetCoords();
+
+        auto x = (coords_1[0] + coords_2[0] + coords_3[0]) / 3;
+        auto y = (coords_1[1] + coords_2[1] + coords_3[1]) / 3;
+        auto z = (coords_1[2] + coords_2[2] + coords_3[2]) / 3;
+        Eigen::Vector3d center;
+        center << x, y, z;
+        return center;
+    }
+
+    void LinearTriangularElement::CalculateLocalStrainAndStressMatrix()
+    {
+        Dactyl::Model::IModel& model = Dactyl::Model::ModelLocator::getModel();
+        auto globalDisplacementVector = model.GetGlobalDisplacementVector();
+        Eigen::Matrix<double, 6, 1> delta;
+
+        int index = 0;
+        for(auto nodeID : _nodesIDs)
+        {
+            auto globalNodeID = model.GetNodeByID(nodeID)->GetGlobalNodeID();
+            auto u = globalDisplacementVector(2 * globalNodeID);
+            auto v = globalDisplacementVector(2 * globalNodeID + 1);
+            // auto w = 0.0;
+            delta(2 * index, 0) = u;
+            delta(2 * index + 1, 0) = v;
+            // delta(index + 2, 0) = w;
+            index++;
+        }
+
+        auto strains = _B * delta;
+        auto stresses = _D * strains;
+
+        auto exx = strains[0];
+        auto exy = strains[2];
+        auto eyy = strains[1];
+
+        auto sxx = stresses[0];
+        auto sxy = stresses[2];
+        auto syy = stresses[1];
+
+        // Strain matrix
+        _strainMatrix(0, 0) = exx;
+        _strainMatrix(0, 1) = exy;
+        _strainMatrix(0, 2) = 0.0;
+
+        _strainMatrix(1, 0) = exy;
+        _strainMatrix(1, 1) = eyy;
+        _strainMatrix(1, 2) = 0.0;
+        
+        _strainMatrix(2, 0) = 0.0;
+        _strainMatrix(2, 1) = 0.0;
+        _strainMatrix(2, 2) = 0.0;
+
+        // Stress matrix
+        _stressMatrix(0, 0) = sxx;
+        _stressMatrix(0, 1) = sxy;
+        _stressMatrix(0, 2) = 0.0;
+
+        _stressMatrix(1, 0) = sxy;
+        _stressMatrix(1, 1) = syy;
+        _stressMatrix(1, 2) = 0.0;
+        
+        _stressMatrix(2, 0) = 0.0;
+        _stressMatrix(2, 1) = 0.0;
+        _stressMatrix(2, 2) = 0.0;
+
+        _vonMisesStress = std::sqrt((sxx*sxx) - (sxx*syy) + (syy*syy) + (3.0*sxy*sxy));
     }
 
     void LinearTriangularElement::CalculateLocalStiffnessMatrix(std::vector<Eigen::Triplet<double>>& subEnsembles)
@@ -80,15 +175,18 @@ namespace Dactyl::Model
     Eigen::Matrix<double, 3, 6> LinearTriangularElement::BuildGradientMatrix()
     {
         auto inverseA = _A.inverse();
-        Eigen::Matrix<double, 3, 6> gradMatrix;
+        Eigen::Matrix<double, 3, 6> gradMatrix; // <double, 3, 9>
         for (int i = 0; i < 3; i++)
         {
             gradMatrix(0, 2 * i + 0) = inverseA(1, i);
-        	gradMatrix(0, 2 * i + 1) = 0.0f;
-        	gradMatrix(1, 2 * i + 0) = 0.0f;
+        	gradMatrix(0, 2 * i + 1) = 0.0;
+            // gradMatrix(0, 2 * i + 2)
+        	gradMatrix(1, 2 * i + 0) = 0.0;
         	gradMatrix(1, 2 * i + 1) = inverseA(2, i);
+            // gradMatrix(1, 2 * i + 2)
         	gradMatrix(2, 2 * i + 0) = inverseA(2, i);
         	gradMatrix(2, 2 * i + 1) = inverseA(1, i);
+            // gradMatrix(2, 2 * i + 2)
         }
         return gradMatrix;
     }
