@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Dactyl.IContext.h"
+#include "Contexts/Dactyl.IContext.h"
 #include "Dactyl.GlobalContext.h"
 #include "Dactyl.ContextLocator.h"
 
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 
     // 5. Build by K-file and clear temp data
     auto openResult = feModel->LoadMesh(*kData);
-    kData->~KData();
+    //kData->~KData();
     
     // 6. Set constraints
     std::any any;
