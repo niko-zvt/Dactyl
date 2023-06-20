@@ -23,12 +23,15 @@ namespace Dactyl::Model
             virtual void Print() = 0;
 
             virtual bool SetConstraintsByCoords(std::any xCoord, std::any yCoord, ConstraintType type, double tolerance) = 0;
+            virtual bool SetNodalForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) = 0;
             virtual bool SetDistributedForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance) = 0;
 
             virtual int GetNodesCount() = 0;
             virtual std::shared_ptr<INode> GetNodeByID(int id) = 0;
             virtual std::shared_ptr<IProperty> GetPropertyByID(int id) = 0;
             virtual std::shared_ptr<IMaterial> GetMaterialByID(int id) = 0;
+            virtual Eigen::VectorXd GetGlobalDisplacementVector() = 0;
+            
     };
 }
 

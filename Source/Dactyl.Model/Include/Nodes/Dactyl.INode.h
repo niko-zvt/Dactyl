@@ -2,6 +2,7 @@
 #ifndef _Dactyl_INode_h_
 #define _Dactyl_INode_h_
 
+#include "Elements/Dactyl.IElement.h"
 #include <Core>
 #include <Dense>
 
@@ -26,9 +27,12 @@ namespace Dactyl::Model
             virtual Eigen::Vector3i GetMovementDOFs() = 0;
             virtual Eigen::Vector3i GetRotationDOFs() = 0;
             virtual void SetDisplacements(Eigen::Vector3d displacements) = 0;
-
+            virtual Eigen::Vector3d GetDisplacements() = 0;
             virtual void AddNodeConstraint(ConstraintType type) = 0;
+            virtual void SetNodeForce(Eigen::Vector3d forceVector) = 0;
             virtual void AddNodeForce(Eigen::Vector3d forceVector) = 0;
+            virtual void AddParentElementID(int parentID) = 0;
+            virtual std::vector<int> GetParentElementIDs() = 0;
     };
 }
 

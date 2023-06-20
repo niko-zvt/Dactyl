@@ -22,6 +22,10 @@ namespace Dactyl::Application
             static double to_double(std::string str);
 
             static int to_int(std::string str);
+
+            static void ConfigurateTest1();
+            static void ConfigurateTest2();
+            static void ConfigurateTest3();
     };
 }
 

@@ -16,6 +16,8 @@
 #include <Core>
 #include <Dense>
 #include <vector>
+#include <set>
+#include <map>
 #include <optional>
 #include <SparseCholesky>
 
@@ -25,6 +27,7 @@ namespace Dactyl::Model
     {
         // Load FE mesh
         auto loadResult = false;
+        auto linkResult = false;
 
         // 1. Check KData and build mesh
         if (kData)
@@ -43,6 +46,9 @@ namespace Dactyl::Model
             // Create elements
             _elements = EntityBuilder::buildElements(data.getElements());
 
+            // Link parents
+            linkResult = LinkParents();
+
             // Create Constraints
             // Do nothing. Manual build
 
@@ -55,7 +61,27 @@ namespace Dactyl::Model
             _nodes.size() > 0 && _elements.size() > 0)
             loadResult = true;
 
-        return loadResult;
+        return loadResult && linkResult;
+    }
+
+    bool FEModel::LinkParents()
+    {
+        auto result = false;
+
+        // Element <-> Nodes
+        for(auto& e : _elements)
+        {
+            auto parentID = e.second->GetElementID();
+            auto childrensIDs = e.second->GetNodeIDs();
+            for(int childID : childrensIDs)
+            {
+                _nodes.GetByID(childID)->AddParentElementID(parentID);
+            }
+        }
+
+        result = true;
+
+        return result;
     }
 
     bool FEModel::LoadModel()
@@ -106,10 +132,11 @@ namespace Dactyl::Model
         return result;
     }
 
-    bool FEModel::SetDistributedForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance)
+    bool FEModel::SetNodalForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance)
     {
         auto result = false;
-
+        auto q = std::sqrt(Fx*Fx + Fy*Fy);
+        
         bool isXAny = !xCoord.has_value();
         bool isYAny = !yCoord.has_value();
 
@@ -122,12 +149,15 @@ namespace Dactyl::Model
         auto xCoordAsConst = isXAny == false ? std::any_cast<double>(xCoord) : 0.0 ;
         auto yCoordAsConst = isYAny == false ? std::any_cast<double>(yCoord) : 0.0 ;
 
-        // Create constraints
+        // Create a list of nodes and a set of non-repeating elements
+        // associated with a distributed force
         std::vector<int> nodesIDs;
+        std::set<int> elementIDs;
         for (const auto& n : _nodes)
         {
             // For each node - check coords
             auto nodeID = n.second->GetNodeID();
+            auto parentIDs = n.second->GetParentElementIDs();
             auto nodeCoords = n.second->GetCoords();
             
             if(isXAny == false && tolerance < std::abs(xCoordAsConst - nodeCoords[0]) ||
@@ -136,20 +166,127 @@ namespace Dactyl::Model
                 continue;
             }
 
-            // List of nodes with force
+            // Add current node
             nodesIDs.push_back(nodeID);
+
+            // Add parents
+            for(auto parentID : parentIDs)
+            {
+                elementIDs.insert(parentID);
+            }
         }
 
-        if(nodesIDs.size() == 0)
+        // Simple check
+        if(nodesIDs.size() == 0 || elementIDs.size() == 0)
             return result;
 
         auto nodalFx = Fx / nodesIDs.size();
         auto nodalFy = Fy / nodesIDs.size();
 
-        for(int id : nodesIDs)
+        for (int id : nodesIDs)
         {
             Eigen::Vector3d nodeForce{nodalFx, nodalFy, 0};
-            _nodes.GetByID(id)->AddNodeForce(nodeForce);
+            _nodes.GetByID(id)->SetNodeForce(nodeForce);
+        }
+
+        result = true;
+        return result;
+    }
+
+    bool FEModel::SetDistributedForceByCoords(std::any xCoord, std::any yCoord, double Fx, double Fy, double tolerance)
+    {
+        auto result = false;
+
+        bool isXAny = !xCoord.has_value();
+        bool isYAny = !yCoord.has_value();
+
+        // Simple check - Any coordinate can only be empty or double
+        if (isXAny == false && xCoord.type() != typeid(double) ||
+            isYAny == false && yCoord.type() != typeid(double))
+            return result;
+
+        // Set const coords
+        auto xCoordAsConst = isXAny == false ? std::any_cast<double>(xCoord) : 0.0;
+        auto yCoordAsConst = isYAny == false ? std::any_cast<double>(yCoord) : 0.0;
+
+        // Create a list of nodes and a set of non-repeating elements
+        // associated with a distributed force
+        std::vector<int> nodesIDs;
+        std::set<int> elementIDs;
+        for (const auto& n : _nodes)
+        {
+            // For each node - check coords
+            auto nodeID = n.second->GetNodeID();
+            auto parentIDs = n.second->GetParentElementIDs();
+            auto nodeCoords = n.second->GetCoords();
+
+            if (isXAny == false && tolerance < std::abs(xCoordAsConst - nodeCoords[0]) ||
+                isYAny == false && tolerance < std::abs(yCoordAsConst - nodeCoords[1]))
+            {
+                continue;
+            }
+
+            // Add current node
+            nodesIDs.push_back(nodeID);
+
+            // Add parents
+            for (auto parentID : parentIDs)
+            {
+                elementIDs.insert(parentID);
+            }
+        }
+
+        // Simple check
+        if (nodesIDs.size() == 0 || elementIDs.size() == 0)
+            return result;
+
+        // For each element ID from the set
+        for (auto eid : elementIDs)
+        {
+            // Get element
+            auto e = _elements.GetByID(eid);
+
+            // Find nodes from a list of related nodes
+            std::vector<int> associatedNodeIDs;
+            for (auto nid : e->GetNodeIDs())
+            {
+                auto iter = std::find(nodesIDs.begin(), nodesIDs.end(), nid);
+                if (iter != nodesIDs.end())
+                {
+                    associatedNodeIDs.push_back(*iter);
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            // Simple check
+            if (associatedNodeIDs.size() != 2)
+            {
+                continue;
+            }
+
+            // Get correct nodes
+            auto n1 = _nodes.GetByID(associatedNodeIDs[0]);
+            auto n2 = _nodes.GetByID(associatedNodeIDs[1]);
+
+            // Coords
+            auto x1 = n1->GetCoords()[0];
+            auto y1 = n1->GetCoords()[1];
+            auto x2 = n2->GetCoords()[0];
+            auto y2 = n2->GetCoords()[1];
+
+            // Create force by length
+            auto h = 1.0;
+            auto l = std::sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
+
+            auto nodalFx = h * Fx * l / 2;
+            auto nodalFy = h * Fy * l / 2;
+            auto nodalFz = 0.0;
+            Eigen::Vector3d nodalForce {nodalFx, nodalFy, nodalFz};
+            n1->AddNodeForce(nodalForce);
+            n2->AddNodeForce(nodalForce);
         }
 
         result = true;
@@ -176,11 +313,11 @@ namespace Dactyl::Model
         int doubleNodesSize = 2 * GetNodesCount();
         auto globalStiffnessMatrix = std::make_unique<Eigen::SparseMatrix<double>>(doubleNodesSize, doubleNodesSize);
         globalStiffnessMatrix->setFromTriplets(localStiffnessMatrixes.begin(), localStiffnessMatrixes.end());
-        _globalStiffnessMatrix = std::move(globalStiffnessMatrix); // Move global stiffness matrix to model
+        _globalStiffnessMatrix = std::move(globalStiffnessMatrix); // Move (fast and hard) global stiffness matrix to model
 
         // 3. Build global force vector
         auto externalForcesVector = std::make_unique<Eigen::VectorXd>(BuildExternalForcesVector());
-        _externalForcesVector = std::move(externalForcesVector); 
+        _globalForceVector = std::move(externalForcesVector); // Move (fast and hard) global forces vector
 
         // 5. Build Constraints
         auto resultConstraints = ApplyConstraints();
@@ -231,13 +368,15 @@ namespace Dactyl::Model
 
     Eigen::VectorXd FEModel::BuildExternalForcesVector()
     {
-        Eigen::VectorXd R(2*_nodes.size());
+        auto doubleNodesSize = 2 * _nodes.size();
+        Eigen::VectorXd R(doubleNodesSize);
         for (const auto& n : _nodes)
         {
             auto globalNodeID = n.second->GetGlobalNodeID();
             auto nodalForce = n.second->GetForce();
-            R.row(2*globalNodeID) << nodalForce(0);
-            R.row(2*globalNodeID + 1) << nodalForce(1);
+            R.row(2 * globalNodeID) << nodalForce(0);       // Fx
+            R.row(2 * globalNodeID + 1) << nodalForce(1);   // Fy
+            //R.row(2 * globalNodeID + 2) << nodalForce(2); // Fz
         }
         return R;
     }
@@ -246,11 +385,30 @@ namespace Dactyl::Model
     {
         auto result = false;
 
+        // 1. Build global ensemble {R} = [K]{u}
         result = BuildGlobalEnsemble();
         if(result == false)
-            return false;
+            return result;
 
+        // 2. Solve linear system {u} = [K']{R}
         result = SolveLinearSystem();
+        if(result == false)
+            return result;
+        
+        // 3. Calculate strains and stresses matrixes
+        result = BuildStrainsAndStressesForAllElements();
+        
+        return result;
+    }
+
+    bool FEModel::BuildStrainsAndStressesForAllElements()
+    {
+        auto result = false;
+
+        for(const auto& e : _elements)
+        {
+            e.second->CalculateLocalStrainAndStressMatrix();
+        }
 
         return result;
     }
@@ -260,13 +418,16 @@ namespace Dactyl::Model
         auto result = false;
 
         Eigen::SimplicialLDLT<Eigen::SparseMatrix<double>> solver(*_globalStiffnessMatrix);
-        Eigen::VectorXd displacements = solver.solve(*_externalForcesVector);
-        result = MoveDisplacementsToNodes(displacements);
+        auto displacements = solver.solve(*_globalForceVector);
+        _globalDisplacementVector = std::make_unique<Eigen::VectorXd>(displacements);;
+        result = true;
+        // TODO: How to properly store displacements data? It may be necessary to copy data to nodes.
+        result = CopyDisplacementsToNodes(displacements);
         
         return result;
     }
 
-    bool FEModel::MoveDisplacementsToNodes(const Eigen::VectorXd& displacements)
+    bool FEModel::CopyDisplacementsToNodes(const Eigen::VectorXd& displacements)
     {
         auto result = false;
 
@@ -301,8 +462,99 @@ namespace Dactyl::Model
         return _materials.GetByID(id);
     }
 
+    Eigen::VectorXd FEModel::GetGlobalDisplacementVector()
+    {
+        return *_globalDisplacementVector;
+    }
+
     void FEModel::Print()
     {
-        // Do nothing.
+        //std::cout << "GLOBAL STIFFNESS MATRIX" << std::endl;
+        //std::cout << *_globalStiffnessMatrix << std::endl;
+
+        //std::cout << "GLOBAL FORCE VECTOR\n" << std::endl;
+        //std::cout << *_globalForceVector << std::endl << std::endl;
+
+        //std::cout << "GLOBAL DISPLACEMENT VECTOR\n" << std::endl;
+        //std::cout << *_globalDisplacementVector << std::endl << std::endl;
+
+        std::cout << "NORMAL STRESSES" << std::endl;
+        std::cout << "\tEID\tX\tY\tSXX\tSYY\tSXY" << std::endl;
+        for(auto& e : _elements)
+        {
+            auto eid = e.second->GetElementID();
+            auto coords = e.second->GetCoordCenter();
+            auto stresses = e.second->GetStressMatrix();
+            auto stressXX = stresses(0, 0);
+            auto stressYY = stresses(1, 1);
+            auto stressXY = stresses(0, 1);
+            double x = coords[0];
+            double y = coords[1];
+            std::cout << "\t" << eid << "\t" << x << "\t" << y << "\t" << stressXX << "\t" << stressYY << "\t" << stressXY << std::endl;
+        }
+
+        //std::cout << "NODAL DISPLACEMENT" << std::endl;
+        //std::cout << "\tNID\tX\tY\tUx\tUy" << std::endl;
+        //int nid = 0;
+        //Eigen::Vector3d coords{0, 0, 0};
+        //Eigen::Vector3d uvw{0, 0, 0};
+        //for (auto& n : _nodes)
+        //{
+        //    nid = n.first;
+        //    coords = n.second->GetCoords();
+        //    uvw = n.second->GetDisplacements();
+        //    std::cout << "\t" << nid << "\t" << coords[0] << "\t" << coords[1] << "\t" << uvw[0] << "\t" << uvw[1] << std::endl;
+        //}
+
+        std::cout << "VON MISES STRESS" << std::endl;
+        std::cout << "\tEID\tX\tY\tSv" << std::endl;       
+        for(auto& e : _elements)
+        {
+            auto eid = e.second->GetElementID();
+            auto coords = e.second->GetCoordCenter();
+            auto sv = e.second->GetVonMisesStress();
+            double x = coords[0];
+            double y = coords[1];
+            std::cout << "\t" << eid << "\t" << x << "\t" << y << "\t" << sv << std::endl;
+        }
+
+        PrintYAxis();
+    }
+
+    void FEModel::PrintYAxis()
+    {
+        std::cout << "SXX ALONG Y-AXIS" << std::endl;
+        std::cout << "\tNID\tX\tY\tSXX" << std::endl;
+
+        // Create a list of nodes and a set of non-repeating elements
+        // associated with a Y-axis
+        double tolerance = 0.001;
+        std::vector<int> nodesIDs;
+        std::set<int> elementIDs;
+        for (const auto& n : _nodes)
+        {
+            // For each node - check coords
+            auto nodeID = n.second->GetNodeID();
+            auto parentIDs = n.second->GetParentElementIDs();
+            auto nodeCoords = n.second->GetCoords();
+            auto xCoord = 0.0;
+
+            if (std::abs(xCoord - nodeCoords[0]) > tolerance)
+            {
+                continue;
+            }
+
+            auto stress = 0.0;
+
+            // Add parents
+            for (auto parentID : parentIDs)
+            {
+                stress = stress + _elements.GetByID(parentID)->GetStressMatrix()(0,0);
+            }
+
+            stress = stress / parentIDs.size();
+            
+            std::cout << "\t" << nodeID << "\t" << nodeCoords[0] << "\t" << nodeCoords[1] << "\t" << stress << std::endl;
+        }
     }
 }
