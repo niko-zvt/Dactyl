@@ -2,8 +2,8 @@
 #ifndef _Dactyl_Node_h_
 #define _Dactyl_Node_h_
 
-#include <Core>
-#include <Dense>
+#include <Eigen/Core>
+#include <Eigen/Dense>
 #include <vector>
 #include "Nodes/Dactyl.INode.h"
 #include "Nodes/Dactyl.INodeCreator.h"

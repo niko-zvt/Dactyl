@@ -1,8 +1,6 @@
 #include "Materials/Dactyl.IMaterial.h"
 #include "Materials/Dactyl.IsotropicMaterial.h"
 #include "Dactyl.ModelAliases.h"
-#include <Core>
-#include <Dense>
 
 namespace Dactyl::Model
 {

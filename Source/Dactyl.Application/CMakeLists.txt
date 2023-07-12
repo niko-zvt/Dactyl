@@ -36,6 +36,7 @@ target_include_directories(${PROJECT_EXE}
         ${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/
         ${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Parsers/
         ${PROJECT_SOURCE_DIR}/${PROJECT_EXE}/Include/Contexts/
-        ${PROJECT_SOURCE_DIR}/${LIB_MATH}/Internal/Include/
+        ${PROJECT_SOURCE_DIR}/${LIB_MATH}/Include/
         ${PROJECT_SOURCE_DIR}/${LIB_MODEL}/Include/
+        ${EIGEN_PATH}/
 )

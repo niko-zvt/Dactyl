@@ -1,5 +1,4 @@
 #include <iostream>
-#include "Dactyl.Calc.h"
 #include "Dactyl.KData.h"
 #include "Dactyl.FEModel.h"
 #include "Materials/Dactyl.IMaterial.h"
@@ -12,14 +11,15 @@
 #include "Elements/Dactyl.LinearTriangularElement.h"
 #include "Dactyl.EntityBuilder.h"
 #include "Dactyl.ModelAliases.h"
-#include <Sparse>
-#include <Core>
-#include <Dense>
+#include <Eigen/Sparse>
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <Eigen/SparseCholesky>
 #include <vector>
 #include <set>
 #include <map>
 #include <optional>
-#include <SparseCholesky>
+
 
 namespace Dactyl::Model
 {
