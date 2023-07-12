@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O0")
 
+set(EIGEN_PATH      $ENV{EIGEN_PATH})
+
 set(PROJECT_NAME    Dactyl)
 set(PROJECT_EXE     Dactyl.Application)
 set(LIB_MATH        Dactyl.Math)

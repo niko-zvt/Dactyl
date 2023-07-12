@@ -1,8 +1,6 @@
 #include "Nodes/Dactyl.INode.h"
 #include "Nodes/Dactyl.Node.h"
 #include "Nodes/Dactyl.INodeCreator.h"
-#include <Core>
-#include <Dense>
 
 namespace Dactyl::Model
 {

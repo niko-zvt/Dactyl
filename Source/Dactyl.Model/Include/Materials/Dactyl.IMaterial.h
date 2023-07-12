@@ -2,8 +2,8 @@
 #ifndef _Dactyl_IMaterial_h_
 #define _Dactyl_IMaterial_h_
 
-#include <Core>
-#include <Dense>
+#include <Eigen/Core>
+#include <Eigen/Dense>
 
 namespace Dactyl::Model
 {

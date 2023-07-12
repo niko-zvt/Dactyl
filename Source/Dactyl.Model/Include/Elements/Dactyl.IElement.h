@@ -3,9 +3,9 @@
 #define _Dactyl_IElement_h_
 
 #include "Nodes/Dactyl.INode.h"
-#include <Sparse>
-#include <Core>
-#include <Dense>
+#include <Eigen/Sparse>
+#include <Eigen/Core>
+#include <Eigen/Dense>
 #include <vector>
 
 namespace Dactyl::Model
