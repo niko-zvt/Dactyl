@@ -40,6 +40,7 @@ Release/*
 release/*
 
 # Temp
+.vs
 .vs/*
 .vscode/*
 *.code-workspace
