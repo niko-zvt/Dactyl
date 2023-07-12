@@ -2,15 +2,16 @@
 #ifndef _Dactyl_LinearTriangularElement_h_
 #define _Dactyl_LinearTriangularElement_h_
 
-#include <Core>
-#include <Dense>
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <Eigen/Sparse>
 #include <vector>
 #include "Nodes/Dactyl.Node.h"
 #include "Nodes/Dactyl.INode.h"
 #include "Elements/Dactyl.IElement.h"
 #include "Elements/Dactyl.IElementCreator.h"
 #include "Dactyl.IModel.h"
-#include <Sparse>
+
 
 namespace Dactyl::Model
 {

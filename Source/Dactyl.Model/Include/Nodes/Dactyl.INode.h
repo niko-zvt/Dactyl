@@ -3,8 +3,8 @@
 #define _Dactyl_INode_h_
 
 #include "Elements/Dactyl.IElement.h"
-#include <Core>
-#include <Dense>
+#include <Eigen/Core>
+#include <Eigen/Dense>
 
 namespace Dactyl::Model
 {

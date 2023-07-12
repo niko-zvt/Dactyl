@@ -12,6 +12,7 @@ target_link_libraries(${LIB_MODEL} ${LIB_MATH})
 
 target_include_directories(${LIB_MODEL} 
     PUBLIC 
-        ${PROJECT_SOURCE_DIR}/${LIB_MATH}/Internal/Include/
+        ${PROJECT_SOURCE_DIR}/${LIB_MATH}/Include/
         ${PROJECT_SOURCE_DIR}/${LIB_MODEL}/Include/
+        ${EIGEN_PATH}/
 )

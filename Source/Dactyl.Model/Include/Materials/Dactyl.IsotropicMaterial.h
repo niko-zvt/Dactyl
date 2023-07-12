@@ -2,8 +2,8 @@
 #ifndef _Dactyl_IsotropicMaterial_h_
 #define _Dactyl_IsotropicMaterial_h_
 
-#include <Core>
-#include <Dense>
+#include <Eigen/Core>
+#include <Eigen/Dense>
 #include <vector>
 #include "Nodes/Dactyl.INode.h"
 #include "Materials/Dactyl.IMaterial.h"

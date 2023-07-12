@@ -1,9 +1,9 @@
 #pragma once
 #ifndef _Dactyl_FEModel_h_
 #define _Dactyl_FEModel_h_
-#include <Sparse>
-#include <Core>
-#include <Dense>
+#include <Eigen/Sparse>
+#include <Eigen/Core>
+#include <Eigen/Dense>
 #include <vector>
 #include <optional>
 #include "Dactyl.ModelAliases.h"

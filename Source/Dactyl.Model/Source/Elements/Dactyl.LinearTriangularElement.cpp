@@ -5,9 +5,9 @@
 #include "Elements/Dactyl.IElement.h"
 #include "Elements/Dactyl.IElementCreator.h"
 #include "Elements/Dactyl.LinearTriangularElement.h"
-#include <Sparse>
-#include <Core>
-#include <Dense>
+#include <Eigen/Sparse>
+#include <Eigen/Core>
+#include <Eigen/Dense>
 #include <vector>
 #include <iostream>
 
