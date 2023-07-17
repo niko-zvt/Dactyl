@@ -1,0 +1,36 @@
+{
+    "version": "0.2.0",
+    "configurations": 
+    [
+        {
+            "name": "Debug Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            
+            "osx": 
+            {
+                "program": "${workspaceFolder}/Build/Mac/Dactyl.Application/Dactyl.Application",
+                "args": ["-r", "-k", "${workspaceFolder}/Build/Mac/Dactyl.Application/Resources/Meshes/task_mesh_extrafine.k"],
+                "MIMode": "lldb"
+            },
+
+            "linux": 
+            {
+                "program": "${workspaceFolder}/Build/Linux/Dactyl.Application/Dactyl.Application",
+                "args": [],
+                "MIMode": "gdb"
+            },
+
+            "windows": 
+            {
+                "program": "${workspaceFolder}\\Build\\Win\\Dactyl.Application\\Dactyl.Application.exe",
+                "args": [],
+                "MIMode": "gdb"
+            }
+        }
+    ]
+}

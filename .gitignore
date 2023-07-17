@@ -32,16 +32,13 @@
 *.app
 
 # Builds
-build/*
 Build/*
+build/*
 Debug/*
 debug/*
 Release/*
 release/*
 
 # Temp
-.vs
 .vs/*
-.vscode/*
-*.code-workspace
 .DS_Store

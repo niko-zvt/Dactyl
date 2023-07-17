@@ -1,0 +1,55 @@
+{
+    "version": "2.0.0",
+    "type": "shell",
+    "options": 
+    {
+        "cwd": "${workspaceRoot}/"
+    },
+
+    "tasks": 
+    [
+        //
+        // Mac OS Tasks
+        //
+
+        // 1. CMake
+        {
+            "label": "Dactyl.MacOS.cmake",
+            "command": "mkdir Build; mkdir ./Build/Mac; cd ./Build/Mac/; cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug ../../Source/",
+            "type": "shell",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+
+        // 2. Make
+        {
+            "label": "Dactyl.MacOS.make",
+            "command": "cd ./Build/Mac/; make -j 8",
+            "type": "shell",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+
+        //
+        // GNU/Linux Tasks
+        //
+
+        //
+        // Windows Tasks
+        //
+    ]
+}

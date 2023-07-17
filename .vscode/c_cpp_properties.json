@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Dactyl - C/C++ Config for MacOS",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/Source/**",
+                "${workspaceFolder}/Source/Dactyl.Application/**",
+                "${workspaceFolder}/Source/Dactyl.Math/**",
+                "${workspaceFolder}/Source/Dactyl.Model/**",
+                "${env:EIGEN_PATH}"
+            ],
+            "defines": [],
+            "macFrameworkPath": [
+                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64",
+            "configurationProvider": "vector-of-bool.cmake-tools"
+        }
+    ],
+    "version": 4
+}
