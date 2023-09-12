@@ -22,7 +22,7 @@ $$
 $$
 
 ### See also
-- Kirsch, 1898, *Die Theorie der Elastizität und die Bedürfnisse der Festigkeitslehre.* Zeitschrift des Vereines deutscher Ingenieure, 42, 797–807.
+- [Kirsch, 1898, *Die Theorie der Elastizität und die Bedürfnisse der Festigkeitslehre.* Zeitschrift des Vereines deutscher Ingenieure, 42, 797–807](Kirsch,%201898,%20Die%20Theorie%20der%20Elastizitat%20und%20die%20Bedurfnisse%20der%20Festigkeitslehre.%20Zeitschrift%20des%20Vereines%20deutscher%20Ingenieure,%2042,%20797–807.pdf).
 
 ## Requirements
 - Implement the Finite Element Method (FEM) solution for the given problem. Calculate and output the normal, tangential, and principal stresses.
