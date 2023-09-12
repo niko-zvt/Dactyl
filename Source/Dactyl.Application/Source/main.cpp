@@ -18,8 +18,8 @@ using Dactyl::Application::Utils;
 int main(int argc, char *argv[])
 {
     // 0. Create global context. Create a unique pointer and provide it to the context locator
-    auto gContex = std::make_unique<Dactyl::Application::GlobalContext>();
-    Dactyl::Application::ContextLocator::provideContext(gContex.get());
+    auto gContext = std::make_unique<Dactyl::Application::GlobalContext>();
+    Dactyl::Application::ContextLocator::provideContext(gContext.get());
 
     // 1. Parse args and update context
     if(argc > 1)
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     }
 
     // 2. Check is runable model
-    if (gContex->isRunable() == false)
+    if (gContext->isRunable() == false)
     {
         return 0;
     }
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     auto parsingResult = Dactyl::Application::FileParser::tryParseKFile(*kData);
     if(parsingResult == false)
     {
-        Utils::print_string("\tError! K-file was not found at '" + gContex->getPathToKFile() + "' path or was corrupted.");
+        Utils::print_string("\tError! K-file was not found at '" + gContext->getPathToKFile() + "' path or was corrupted.");
         Utils::print_string("\tTry loading the corrected K-file or build the FE model manually.");
         return 1;
     }
