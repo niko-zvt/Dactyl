@@ -42,3 +42,4 @@ release/*
 # Temp
 .vs/*
 .DS_Store
+.qodo

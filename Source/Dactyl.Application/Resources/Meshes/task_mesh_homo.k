@@ -3,7 +3,7 @@ $
 $ File created by cubit version 2021.11
 $...>....1....>....2....>....3....>....4....>....5....>....6....>....7....>....8
 *TITLE
-$ cubit(C:/Users/Kukushkin/Desktop/task_mesh_homo.k): 08/11/2022: 16:00:04
+$ cubit(task_mesh_homo.k): 08/11/2022: 16:00:04
 *PART
 Block 3
 $    pid     sid     mid   eosid    hgid    grav  adpopt    tmid

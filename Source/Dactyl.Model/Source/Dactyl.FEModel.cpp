@@ -19,6 +19,8 @@
 #include <set>
 #include <map>
 #include <optional>
+#include <fstream>
+#include <sstream>
 
 
 namespace Dactyl::Model
@@ -490,7 +492,7 @@ namespace Dactyl::Model
             auto stressXY = stresses(0, 1);
             double x = coords[0];
             double y = coords[1];
-            std::cout << "\t" << eid << "\t" << x << "\t" << y << "\t" << stressXX << "\t" << stressYY << "\t" << stressXY << std::endl;
+            std::cout << "\t" << eid << "\t" << x << "\t" << y << "\t" << stressXX << "\t" << stressYY << "\t" << stressXY << "\n";
         }
 
         //std::cout << "NODAL DISPLACEMENT" << std::endl;
@@ -507,7 +509,7 @@ namespace Dactyl::Model
         //}
 
         std::cout << "VON MISES STRESS" << std::endl;
-        std::cout << "\tEID\tX\tY\tSv" << std::endl;       
+        std::cout << "\tEID\tX\tY\tSv" << std::endl; 
         for(auto& e : _elements)
         {
             auto eid = e.second->GetElementID();
@@ -515,46 +517,43 @@ namespace Dactyl::Model
             auto sv = e.second->GetVonMisesStress();
             double x = coords[0];
             double y = coords[1];
-            std::cout << "\t" << eid << "\t" << x << "\t" << y << "\t" << sv << std::endl;
+            std::cout << "\t" << eid << "\t" << x << "\t" << y << "\t" << sv << "\n";
         }
 
-        PrintYAxis();
-    }
-
-    void FEModel::PrintYAxis()
-    {
         std::cout << "SXX ALONG Y-AXIS" << std::endl;
         std::cout << "\tNID\tX\tY\tSXX" << std::endl;
-
-        // Create a list of nodes and a set of non-repeating elements
-        // associated with a Y-axis
-        double tolerance = 0.001;
-        std::vector<int> nodesIDs;
-        std::set<int> elementIDs;
-        for (const auto& n : _nodes)
+        // Print SXX along Y-axis
         {
-            // For each node - check coords
-            auto nodeID = n.second->GetNodeID();
-            auto parentIDs = n.second->GetParentElementIDs();
-            auto nodeCoords = n.second->GetCoords();
-            auto xCoord = 0.0;
-
-            if (std::abs(xCoord - nodeCoords[0]) > tolerance)
+            // Create a list of nodes and a set of non-repeating elements
+            // associated with a Y-axis
+            double tolerance = 0.001;
+            std::vector<int> nodesIDs;
+            std::set<int> elementIDs;
+            for (const auto& n : _nodes)
             {
-                continue;
+                // For each node - check coords
+                auto nodeID = n.second->GetNodeID();
+                auto parentIDs = n.second->GetParentElementIDs();
+                auto nodeCoords = n.second->GetCoords();
+                auto xCoord = 0.0;
+
+                if (std::abs(xCoord - nodeCoords[0]) > tolerance)
+                {
+                    continue;
+                }
+
+                auto stress = 0.0;
+
+                // Add parents
+                for (auto parentID : parentIDs)
+                {
+                    stress = stress + _elements.GetByID(parentID)->GetStressMatrix()(0,0);
+                }
+
+                stress = stress / parentIDs.size();
+
+                std::cout << "\t" << nodeID << "\t" << nodeCoords[0] << "\t" << nodeCoords[1] << "\t" << stress << std::endl;
             }
-
-            auto stress = 0.0;
-
-            // Add parents
-            for (auto parentID : parentIDs)
-            {
-                stress = stress + _elements.GetByID(parentID)->GetStressMatrix()(0,0);
-            }
-
-            stress = stress / parentIDs.size();
-            
-            std::cout << "\t" << nodeID << "\t" << nodeCoords[0] << "\t" << nodeCoords[1] << "\t" << stress << std::endl;
         }
     }
 }

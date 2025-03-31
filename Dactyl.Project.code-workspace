@@ -81,7 +81,11 @@
 			"core": "cpp",
 			"filesystem": "cpp",
 			"any": "cpp",
-			"sparse": "cpp"
+			"sparse": "cpp",
+			"charconv": "cpp",
+			"execution": "cpp",
+			"forward_list": "cpp",
+			"print": "cpp"
 		}
 	}
 }
